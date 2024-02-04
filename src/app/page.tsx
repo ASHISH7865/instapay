@@ -14,9 +14,15 @@ import { Services } from "@/components/pages/landing-page/Services";
 import { Sponsors } from "@/components/pages/landing-page/Sponsors";
 import { Team } from "@/components/pages/landing-page/Team";
 import { Testimonials } from "@/components/pages/landing-page/Testimonials";
+import { useAuth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 
 export default function Home() {
+  const {isSignedIn} = useAuth();
+  if (isSignedIn) {
+    redirect("/dashboard");
+  }
   return (
     <main className="">
      <Navbar />

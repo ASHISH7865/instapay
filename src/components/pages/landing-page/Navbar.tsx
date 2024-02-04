@@ -94,13 +94,13 @@ export const Navbar = () => {
                     </a>
                   ))}
                   <Link
-                    href="/login"
+                    href="/sign-in"
                   
                     className={`w-[110px] border ${buttonVariants({
                       variant: "default",
                     })}`}
                   >
-                    Login
+                    Sign in
                   </Link>
                 </nav>
               </SheetContent>
@@ -124,13 +124,13 @@ export const Navbar = () => {
 
           <div className="hidden md:flex gap-2">
             <Link
-                    href="/login"
+                    href="/sign-in"
                   
                     className={`w-[110px] border ${buttonVariants({
                       variant: "default",
                     })}`}
                   >
-                    Login
+                    Sign in
                   </Link>
 
             <ModeToggle />

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { HeroCards } from "./HeroCards";
+import Link from "next/link";
 
 export const Hero = () => {
   return (
@@ -23,10 +24,12 @@ export const Hero = () => {
         </main>
 
         <p className="text-xl text-muted-foreground md:w-10/12 mx-auto lg:mx-0">
-          Build your React landing page effortlessly with the required sections
-          to your project.
+          Build your React landing page effortlessly with the required sections to your project.
         </p>
 
+        <Button variant={"default"} className="mt-8">
+          <Link href={"/sign-up"}>Get started</Link>
+        </Button>
       </div>
 
       {/* Hero cards sections */}
