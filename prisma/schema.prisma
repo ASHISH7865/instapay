@@ -10,12 +10,13 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model User {
+model UserInfo {
   id        Int      @id @default(autoincrement())
+  userId    String   @unique
   username  String   @unique
   email     String   @unique
-  password  String
   balance   Float
+  setupCompleted Boolean @default(false)
   createdAt DateTime @default(now()) 
   updatedAt DateTime @updatedAt
   transactionsSent    Transaction[] @relation("Sender")
@@ -34,8 +35,8 @@ model Transaction {
   updatedAt   DateTime @updatedAt
 
   // Define foreign keys and relationships
-  sender      User     @relation("Sender", fields: [senderId], references: [id])
-  recipient   User     @relation("Recipient", fields: [recipientId], references: [id])
+  sender      UserInfo     @relation("Sender", fields: [senderId], references: [id])
+  recipient   UserInfo     @relation("Recipient", fields: [recipientId], references: [id])
 }
 
 // Enum for Transaction Type
