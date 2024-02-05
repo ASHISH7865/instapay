@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { About } from "@/components/pages/landing-page/About";
 import { Cta } from "@/components/pages/landing-page/Cta";
 import { FAQ } from "@/components/pages/landing-page/FAQ";
@@ -17,15 +17,14 @@ import { Testimonials } from "@/components/pages/landing-page/Testimonials";
 import { useAuth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-
 export default function Home() {
-  const {isSignedIn} = useAuth();
+  const { isSignedIn } = useAuth();
   if (isSignedIn) {
     redirect("/dashboard");
   }
   return (
     <main className="">
-     <Navbar />
+      <Navbar />
       <Hero />
       <Sponsors />
       <About />

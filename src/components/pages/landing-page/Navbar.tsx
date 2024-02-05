@@ -15,7 +15,7 @@ import {
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "../../ui/button";
-import { Menu } from "lucide-react";
+import { Menu , Wallet2 } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { LogoIcon } from "./Icons";
 import Link from "next/link";
@@ -53,10 +53,10 @@ export const Navbar = () => {
           <NavigationMenuItem className="font-bold flex">
             <a
               href="/"
-              className="ml-2 font-bold text-xl flex"
+              className="ml-2 font-bold text-xl flex gap-1 items-center"
             >
-              <LogoIcon />
-              ShadcnUI/React
+              <Wallet2 className="text-primary" />
+              InstaPay
             </a>
           </NavigationMenuItem>
 

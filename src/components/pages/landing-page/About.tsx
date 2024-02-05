@@ -3,14 +3,11 @@ import Image from "next/image";
 
 export const About = () => {
   return (
-    <section
-      id="about"
-      className="container py-24 sm:py-32"
-    >
+    <section id="about" className="container py-24 sm:py-32">
       <div className="bg-muted/50 border rounded-lg py-12">
         <div className="px-6 flex flex-col-reverse md:flex-row gap-8 md:gap-12">
           <Image
-            src={'/assets/pilot.png'}
+            src={"/assets/pilot.png"}
             alt=""
             className="w-[300px] object-contain rounded-lg"
             width={300}
@@ -25,11 +22,9 @@ export const About = () => {
                 Company
               </h2>
               <p className="text-xl text-muted-foreground mt-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit
-                amet, consectetur adipiscing elit.
+                We are a team of passionate developers building the next generation of financial tools. Our mission is
+                to make finance simple, accessible and secure for everyone. We are committed to building a platform that
+                empowers people to take control of their finances and achieve their goals.
               </p>
             </div>
 

@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  balance   Float
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt
+  transactionsSent    Transaction[] @relation("Sender")
+  transactionsReceived Transaction[] @relation("Recipient")
+}
+
+// Define the Transaction table
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  senderId    Int
+  recipientId Int
+  amount      Float
+  type        TransactionType
+  status      TransactionStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Define foreign keys and relationships
+  sender      User     @relation("Sender", fields: [senderId], references: [id])
+  recipient   User     @relation("Recipient", fields: [recipientId], references: [id])
+}
+
+// Enum for Transaction Type
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  TRANSFER
+}
+
+// Enum for Transaction Status
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
