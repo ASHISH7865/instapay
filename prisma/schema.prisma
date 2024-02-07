@@ -21,6 +21,8 @@ model UserInfo {
   updatedAt DateTime @updatedAt
   transactionsSent    Transaction[] @relation("Sender")
   transactionsReceived Transaction[] @relation("Recipient")
+
+  beneficiaries         Beneficiary[] // Relationship with beneficiaries
 }
 
 // Define the Transaction table
@@ -37,6 +39,17 @@ model Transaction {
   // Define foreign keys and relationships
   sender      UserInfo     @relation("Sender", fields: [senderId], references: [id])
   recipient   UserInfo     @relation("Recipient", fields: [recipientId], references: [id])
+}
+
+model Beneficiary {
+  id          Int         @id @default(autoincrement())
+  userId      Int         // User who owns the beneficiary
+  name        String
+  email       String      @db.VarChar(255) // Encrypt this field
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  // Relationships
+  user        UserInfo    @relation(fields: [userId], references: [id]) // Relationship with user
 }
 
 // Enum for Transaction Type

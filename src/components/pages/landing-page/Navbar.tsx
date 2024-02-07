@@ -16,7 +16,7 @@ import {
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "../../ui/button";
 import { Menu , Wallet2 } from "lucide-react";
-import { ModeToggle } from "./mode-toggle";
+import { ModeToggle } from "../../shared/mode-toggle";
 import { LogoIcon } from "./Icons";
 import Link from "next/link";
 

@@ -24,6 +24,7 @@ export default function Home() {
   }
   return (
     <main className="">
+    
       <Navbar />
       <Hero />
       <Sponsors />

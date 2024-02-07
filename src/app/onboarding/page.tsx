@@ -5,7 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { updateUserOnboardingStatus, checkUserExists, createUserInfo } from "@/lib/actions/user.actions";
 import Spinner from "@/components/shared/spinner";
 import { loadingTextVariants } from "@/lib/animation";
-import SettingUpUI from "@/components/pages/dashboard/components/settingup-ui";
+import SettingUpUI from "@/components/pages/dashboard/settingup-ui";
 
 
 interface IUserInfo {

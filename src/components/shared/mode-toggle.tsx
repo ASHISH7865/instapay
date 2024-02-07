@@ -7,9 +7,39 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
+import {
+  syncBorderRadius,
+  syncFontFamily,
+  syncGrayColor,
+  syncThemeColor,
+} from "@/lib/themes/use-theme-generator";
+import { useThemeStore } from "@/lib/themes/use-theme-store";
+import { useEffect } from "react";
 
 export function ModeToggle() {
-  const { setTheme } = useTheme();
+  const { setTheme , resolvedTheme } = useTheme();
+  const currentGrayColor = useThemeStore((state) => state.grayColor)
+  const currentAccentColor = useThemeStore((state) => state.accentColor)
+  const currentFontFamily = useThemeStore((state) => state.fontFamily)
+  const currentBorderRadius = useThemeStore((state) => state.borderRadius)
+
+  console.log(currentGrayColor)
+
+ useEffect(() => {
+    syncGrayColor(currentGrayColor, resolvedTheme)
+  }, [currentGrayColor, resolvedTheme])
+
+ useEffect(() => {
+    syncThemeColor(currentAccentColor, resolvedTheme)
+  }, [currentAccentColor, resolvedTheme])
+
+ useEffect(() => {
+    syncFontFamily(currentFontFamily)
+  }, [currentFontFamily])
+
+ useEffect(() => {
+    syncBorderRadius(currentBorderRadius)
+  }, [currentBorderRadius])
 
   return (
     <DropdownMenu>
