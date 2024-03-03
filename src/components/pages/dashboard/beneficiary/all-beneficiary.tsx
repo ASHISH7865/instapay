@@ -1,77 +1,65 @@
-'use client';
-import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Edit2, Trash2, PlusIcon } from "lucide-react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Trash2, PlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import AddBeneficiary from "@/components/modal/add-beneficiary";
+import UpsertBeneficiaryModal from "@/components/modal/upsertBeneficiaryModal";
 import { ModalOpenMode, ModalState } from "@/types/modal";
-
-
-interface BeneficiaryData {
-  id: number;
-  name: string;
-  email: string;
+import { BeneficiaryDefaultValuesTypes } from "@/components/forms/upsertBeneficiaryForm";
+import { BeneficiaryData, deleteBeneficiary } from "@/lib/actions/beneficiary.actions";
+import Spinner from "@/components/shared/spinner";
+import SearchComponent from "@/components/shared/SearchInput";
+interface AllBeneficiaryProps {
+  beneficiaries: BeneficiaryData[];
 }
 
-const data: BeneficiaryData[] = [
-  { id: 1, name: "John Doe", email: "Johndoe@gmail.com" },
-  { id: 2, name: "Jane Doe", email: "Johndoe@gmail.com" },
-  { id: 3, name: "John Doe", email: "Johndoe@gmail.com" },
-  { id: 4, name: "Jane Doe", email: "Johndoe@gmail.com" },
-];
+const AllBeneficiary = ({ beneficiaries }: AllBeneficiaryProps) => {
 
+  const [loading, setLoading] = useState(false);
+  const [beneficiariesData, setBeneficiariesData] = useState<BeneficiaryData[]>(beneficiaries);
+  const [modalOpen, setModalOpen] = useState<ModalState>({
+    isOpen: false,
+    mode: "create",
+    defaultValues: {
+      userId: "",
+    },
+  });
 
-
-
-const AllBeneficiary = () => {
-
-  const [modalOpen , setModalOpen] = useState<ModalState>({
-    isOpen : false,
-    mode : "create",
-    data: {}
-  })  
-
-  const handleOpenModal = (mode:ModalOpenMode , data: object) => {
+  const handleOpenModal = (mode: ModalOpenMode, data: BeneficiaryDefaultValuesTypes) => {
     setModalOpen({
       isOpen: true,
       mode: mode,
-      data: data
-    })
-  }
+      defaultValues: data,
+    });
+  };
 
   const handleCloseModal = () => {
-    console.log("close")
     setModalOpen({
       isOpen: false,
       mode: "create",
-      data: {}
-    })
-  }
+      defaultValues: {
+        userId: "",
+      },
+    });
+  };
+
+  const handleDeleteBeneficiary = async (id: string) => {
+    setLoading(true);
+    await deleteBeneficiary(id);
+    setLoading(false);
+  };
 
   return (
     <div>
       <div className="flex justify-between items-center">
         <p className="text-md font-bold">All Beneficiaries</p>
-        <Input
-          type="text"
-          placeholder="Search Beneficiaries"
-          className="w-64"
-        />
-        <Button className="mt-2" variant="default" onClick={() => handleOpenModal("create" , {message:"this is create mode"})} >
-            <PlusIcon size={20} className="mr-2" />
-            Add Beneficiary
-            </Button>
+        <SearchComponent data={beneficiariesData} setData={setBeneficiariesData} searchKeys={["name", "email"]} />
+        <Button className="mt-2" variant="secondary" onClick={() => handleOpenModal("create", { userId: "" })}>
+          <PlusIcon size={20} className="mr-2" />
+          Add Beneficiary
+        </Button>
       </div>
       <Table className="w-full">
         <TableHeader>
@@ -83,22 +71,34 @@ const AllBeneficiary = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((item) => (
+          {beneficiariesData.map((item) => (
             <TableRow key={item.id}>
               <TableCell className="font-medium">{item.name}</TableCell>
               <TableCell>{item.email}</TableCell>
               <TableCell>
-                <Badge className="bg-green-600">Active</Badge>
+                <Badge>Active</Badge>
               </TableCell>
               <TableCell className="flex justify-end gap-2">
-                <Edit2 size={20} className="text-blue-500" onClick={() => handleOpenModal("edit" , {message:"this is edit mode"})} />
-                <Trash2 size={20} className="text-red-800" />
+              { loading ? <Spinner size={4} /> : <Trash2 size={20} className="text-red-800" onClick={() => handleDeleteBeneficiary(item.id)} />}
               </TableCell>
             </TableRow>
           ))}
+          {beneficiaries.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center text-muted-foreground">
+                No Beneficiaries found
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
-      <AddBeneficiary open={modalOpen.isOpen} onClose={handleCloseModal} defaultValue={modalOpen.data} mode={modalOpen.mode} />
+      {/* Modal */}
+      <UpsertBeneficiaryModal
+        open={modalOpen.isOpen}
+        onClose={handleCloseModal}
+        defaultValue={modalOpen.defaultValues}
+        mode={modalOpen.mode}
+      />
     </div>
   );
 };

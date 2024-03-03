@@ -2,7 +2,7 @@ import { GrayColor, ThemeColor, grayColors, themes } from "./themes"
 
 import { useThemeStore } from "./use-theme-store"
 
-const borderRadius = ["0", "0.3", "0.5", "0.75", "1"] as const
+const borderRadius = ["0", "0.3", "0.5", "0.75", "1" , "2"] as const
 
 export type BorderRadius = (typeof borderRadius)[number]
 

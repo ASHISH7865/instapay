@@ -23,8 +23,6 @@ export function ModeToggle() {
   const currentFontFamily = useThemeStore((state) => state.fontFamily)
   const currentBorderRadius = useThemeStore((state) => state.borderRadius)
 
-  console.log(currentGrayColor)
-
  useEffect(() => {
     syncGrayColor(currentGrayColor, resolvedTheme)
   }, [currentGrayColor, resolvedTheme])

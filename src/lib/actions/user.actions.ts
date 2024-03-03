@@ -1,15 +1,23 @@
 "use server";
 import prisma from "@/lib/prisma";
 
-interface IUserInfo {
+export interface IUserInfo {
   email: string;
   userId: string;
   username: string;
 }
 
+export interface User {
+  id: string;
+  userId: string;
+  email: string;
+  username: string;
+  setupCompleted: boolean;
+  balance: number;
+}
+
 export async function updateUserOnboardingStatus(userId: string) {
   try {
-    console.log("userId", userId);
     // Update user info to set setupCompleted to true 
     // 1. Find user info by userId and check if it exists
     const user = await prisma.userInfo.findUnique({
@@ -81,5 +89,17 @@ export async function checkUserExists(userId: string) {
   } catch (error) {
     console.log(error);
     throw new Error("Error checking if user exists");
+  }
+}
+
+export async function getAllUserInfo(){
+  try {
+    const users = await prisma.userInfo.findMany();
+    return {
+      message: "Users fetched successfully",
+      data: users,
+    };
+  } catch (error) {
+    throw new Error("Error fetching users");
   }
 }

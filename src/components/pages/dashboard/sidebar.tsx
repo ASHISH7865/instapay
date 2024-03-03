@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { UserButton } from "@clerk/nextjs";
-import { HomeIcon, CalendarIcon, User, IndianRupee, CogIcon } from "lucide-react";
+import { HomeIcon, CalendarIcon, User, IndianRupee, CogIcon, Wallet } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
@@ -25,8 +25,13 @@ const SidebarContent = [
     current: false,
   },
   {
+    name:"Wallet",
+    href:"/dashboard/wallet",
+    icon: Wallet,
+  },
+  {
     name: "Payments",
-    href: "/payments",
+    href: "/dashboard/payments",
     icon: IndianRupee,
     current: false,
   },
@@ -57,7 +62,7 @@ const Sidebar = () => {
       </nav>
    { user && 
      <div className="absolute bottom-0 w-full p-2 ">
-        <div className="flex border p-2  items-center gap-2 border-primary">
+        <div className="flex border p-2  items-center gap-2 border-primary rounded-md">
           <UserButton afterSignOutUrl="/" />
           <div className="flex flex-col ml-2">
             <span className="text-md font-bold">{user?.fullName}

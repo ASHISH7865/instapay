@@ -1,85 +1,53 @@
 "use client";
-import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
-import { updateUserOnboardingStatus, checkUserExists, createUserInfo } from "@/lib/actions/user.actions";
+import React, { useEffect } from "react";
+import PageHeader from "@/components/shared/PageHeader";
+import OnboardingForm from "@/components/forms/OnboardingForm";
+import { useAuth } from "@clerk/nextjs";
+import { getUserInfo } from "@/lib/actions/onbaording.action";
 import Spinner from "@/components/shared/spinner";
-import { loadingTextVariants } from "@/lib/animation";
-import SettingUpUI from "@/components/pages/dashboard/settingup-ui";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 
-interface IUserInfo {
-  id: number;
-  userId: string;
-  username: string;
-  email: string;
-  balance: number;
-  setupCompleted: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+
 
 const Onboarding = () => {
-  const { isSignedIn, user, isLoaded } = useUser();
-  const [creatingUserLoading, setCreatingUserLoading] = useState(false);
-  const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
-
-  const createUserInfoIfNotExists = async () => {
-    if (!user) return;
-
-    const { id, primaryEmailAddress, username } = user;
-    const { emailAddress } = primaryEmailAddress || {};
-
-    try {
-      const result = await checkUserExists(id);
-
-      if (result.userExists) {
-        setUserInfo(result?.user);
-      } else if (emailAddress && username) {
-        setCreatingUserLoading(true);
-        const createdUser = await createUserInfo({
-          email: emailAddress,
-          userId: id,
-          username,
-        });
-
-        setUserInfo(createdUser.user);
-      }
-    } catch (error) {
-      // Handle errors here
-    } finally {
-      setCreatingUserLoading(false);
-    }
-  };
-
-
+  const { userId, isLoaded } = useAuth();
+  const [userInfoExist, setUserInfoExist] = React.useState(true);
+  const [laoding, setLoading] = React.useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      createUserInfoIfNotExists();
+    if (userId) {
+      setLoading(true);
+      getUserInfo(userId).then((res) => {
+        if (res) {
+          setUserInfoExist(true);
+        }
+        else {
+          setUserInfoExist(false);
+        }
+        setLoading(false);
+      }
+      )
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, isSignedIn, userInfo?.setupCompleted]);
+  }, [isLoaded, userId])
+
+  if (laoding) {
+    return <Spinner />
+  }
 
   return (
-    <div>
-      {!isLoaded || !isSignedIn || !userInfo ? (
-        <div className="flex justify-center items-center h-screen">
-          <Spinner />
-        </div>
-      ) : creatingUserLoading ? (
-        <div className="flex flex-col justify-center gap-4 items-center h-screen">
-          <Spinner />
-          <motion.span
-            variants={loadingTextVariants}
-            animate="animate"
-            initial="initial"
-            className="text-2xl font-bold mb-4"
-          >
-            Setting up your account
-          </motion.span>
-        </div>
-      ) : userInfo && <SettingUpUI userInfo={userInfo}  /> }
+    !userInfoExist ? <div className="flex flex-col items-center justify-center w-[80%]  ">
+      <PageHeader title="Setting up your account" description="Just a few more steps to get started" />
+      <OnboardingForm />
+    </div> : <div className="absolute flex flex-col gap-10 top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%]">
+      <span className="text-2xl font-bold text-center">
+        You are already onboarded
+      </span>
+      <Button variant={"secondary"} onClick={() => router.push("/dashboard")}>
+        Go to dashboard
+      </Button>
     </div>
   );
 };

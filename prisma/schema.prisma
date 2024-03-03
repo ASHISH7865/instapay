@@ -4,59 +4,96 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model UserInfo {
-  id        Int      @id @default(autoincrement())
-  userId    String   @unique
-  username  String   @unique
-  email     String   @unique
-  balance   Float
-  setupCompleted Boolean @default(false)
-  createdAt DateTime @default(now()) 
-  updatedAt DateTime @updatedAt
-  transactionsSent    Transaction[] @relation("Sender")
-  transactionsReceived Transaction[] @relation("Recipient")
-
+  id                    String        @id @default(uuid())
+  userId                String        @unique
+  firstName             String
+  lastName              String
+  username              String        @unique
+  primaryEmailAddresses String        @unique
+  gender                String
+  phoneNumber           String        @unique
+  city                  String
+  state                 String
+  country               String
+  postalCode            String
+  setupCompleted        Boolean       @default(false)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  // Relationships
+  transactionsSent      Transaction[] @relation("Sender")
+  transactionsReceived  Transaction[] @relation("Recipient")
   beneficiaries         Beneficiary[] // Relationship with beneficiaries
+  wallet                Wallet?
+}
+
+model Wallet {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  userInfo           UserInfo @relation(fields: [userId], references: [userId])
+  balance            Float
+  walletPasswordType String
+  walletPin          String
+  currencyPreference String
+  usagePreference    String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 // Define the Transaction table
 model Transaction {
-  id          Int      @id @default(autoincrement())
-  senderId    Int
-  recipientId Int
-  amount      Float
-  type        TransactionType
-  status      TransactionStatus @default(PENDING)
+  id            String             @id @default(uuid())
+  trnxType      TransactionType
+  purpose       TransactionPurpose
+  senderId      String
+  recipientId   String
+  amount        Float
+  balanceBefore Float
+  balanceAfter  Float
+  status        TransactionStatus  @default(PENDING)
+
+  summary     String
+  trnxSummary String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Define foreign keys and relationships
-  sender      UserInfo     @relation("Sender", fields: [senderId], references: [id])
-  recipient   UserInfo     @relation("Recipient", fields: [recipientId], references: [id])
+  sender    UserInfo @relation("Sender", fields: [senderId], references: [id])
+  recipient UserInfo @relation("Recipient", fields: [recipientId], references: [id])
 }
 
 model Beneficiary {
-  id          Int         @id @default(autoincrement())
-  userId      Int         // User who owns the beneficiary
-  name        String
-  email       String      @db.VarChar(255) // Encrypt this field
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  beneficiaryId String   @unique
+  name          String
+  email         String   @db.VarChar(255) // Encrypt this field
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   // Relationships
-  user        UserInfo    @relation(fields: [userId], references: [id]) // Relationship with user
+  user          UserInfo @relation(fields: [beneficiaryId], references: [userId]) // Relationship with user
 }
 
 // Enum for Transaction Type
 enum TransactionType {
-  DEPOSIT
-  WITHDRAWAL
+  DEBIT
+  CREDIT
   TRANSFER
+  REVERSAL
+}
+
+enum TransactionPurpose {
+  DEPOSIT
+  TRANSFER
+  WITHDRAWAL
+  REVERSAL
 }
 
 // Enum for Transaction Status

@@ -39,7 +39,7 @@ export const Sponsors = () => {
 
       <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
         {technologyStack.map(({ icon, name }, index) => (
-          <Badge key={index} className="flex items-center gap-2 bg-secondary p-2 rounded-md shadow-md">
+          <Badge key={index} variant={"secondary"} className="flex items-center gap-2  p-2 rounded-md shadow-md">
             <span>{icon}</span>
             <h3 className="text-md font-bold">{name}</h3>
           </Badge>
