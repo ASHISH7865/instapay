@@ -58,7 +58,7 @@ const UpsertBeneficiaryForm = ({ mode , onClose }: UpsertBeneficiaryFormProps) =
     // Fetch all users and remove the current logged in user from the list
     getAllUserInfo()
       .then((data) => {
-        setUsers(data.data.filter((user) => user.userId !== currentLoggedInUser));
+        // setUsers(data.data.filter((user) => user.userId !== currentLoggedInUser));
         setLoading(false);
       })
       .catch((error) => {

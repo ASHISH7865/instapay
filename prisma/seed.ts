@@ -11,16 +11,7 @@ const beneFiciaryDataForAshish = [
 
 const load = async () => {
     try {
-        for (let i = 0; i < beneFiciaryDataForAshish.length; i++) {
-            await prisma.beneficiary.create({
-            data: {
-                beneficiaryId: beneFiciaryDataForAshish[i].benefeciaryId,
-                email: beneFiciaryDataForAshish[i].email,
-                userId: beneFiciaryDataForAshish[i].userId,
-                name: beneFiciaryDataForAshish[i].name,
-            },
-            })
-        }
+      
     } catch (e) {
       console.error(e)
       process.exit(1)

@@ -93,7 +93,7 @@ const OnboardingForm = () => {
         stateOrProvince: "",
       },
     })
-  }, [user])
+  }, [user , form])
 
   if (!isLoaded) return <Spinner className="absolute top-[50%]" />;
 
