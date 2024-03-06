@@ -89,11 +89,78 @@ export async function createUserWallet(userId: string , data : CreateWalletType)
 
 export async function getUserWallet(userId: string) {
   try {
-    const wallet = await prisma.wallet.findUnique({
+    const userInfo = await prisma.userInfo.findUnique({
       where: {
         userId: userId,
       },
     });
-    return wallet;
+
+    if (!userInfo) {
+      return {
+        status: "error",
+        message: "User not found",
+      }
+    }
+
+    const wallet = await prisma.wallet.findUnique({
+      where: {
+        userId: userInfo.id,
+      },
+    });
+
+    return {
+      status: "success",
+      message : "Wallet found",
+      wallet: wallet
+    }
   } catch (err: any) {}
+}
+
+export async function checkWalletBalance(userId: string , pin : string) {
+  try {
+
+    const userInfo = await prisma.userInfo.findUnique({
+      where:{
+        userId: userId
+      }
+    });
+
+    if (!userInfo) {
+      return {
+        status: "error",
+        message: "User not found",
+      }
+    }
+
+    const wallet = await prisma.wallet.findUnique({
+      where: {
+        userId: userInfo.id,
+      },
+    });
+
+    if (!wallet) {
+      return {
+        status: "error",
+        message: "Wallet not found",
+      }
+    }
+
+    const match = await bcrypt.compare(pin, wallet.walletPin);
+    if (!match) {
+      return {
+        status: "error",
+        message: "Invalid wallet pin",
+      }
+    }
+
+    return {
+      status: "success",
+      message: "Wallet balance found",
+      balance: wallet.balance,
+      currency: wallet.currencyPreference,
+    }
+
+  } catch (err: any) {
+    console.log("Error in checking wallet balance", err);
+  }
 }

@@ -4,9 +4,11 @@ import { Button } from '../ui/button'
 import SeperateInput from '../forms/SeperateInputForm'
 
 const WalletPinModal = () => {
-
+  const [open, setOpen] = React.useState(false)
+  const onOpenChange = () => setOpen(!open)
+  const close = () => setOpen(false)
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button type="button" variant="secondary">
           Check Balance
@@ -18,7 +20,7 @@ const WalletPinModal = () => {
             Enter Wallet Pin
           </DialogTitle>
         </DialogHeader>
-        <SeperateInput numberOfInput={4} />
+        <SeperateInput close={close} numberOfInput={6} />
       </DialogContent>
     </Dialog>
   )
