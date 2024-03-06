@@ -15,19 +15,6 @@ export const onboardingSchema = z.object({
       postalCode: z.string().min(5, { message: 'Postal code must be at least 5 characters long' }),
       country: z.string().min(2, { message: 'Country must be at least 2 characters long' }),
     }),
-
-    // if passwordType is pin, then value must be a 4 digit number
-    walletSecurityPreferences: z.object({
-      passwordType: z.enum(['PIN'], { errorMap:  (issue, ctx) => ({ message: 'Password Type requried' })}), 
-      value: z.string().refine((val) => val.length === 4, { message: 'PIN must be 4 digits long' }),
-    }),
-      
-  
-    // Currency Preferences
-    currencyPreferences: z.enum(['USD', 'EUR', 'GBP',"INR", 'Other'],{errorMap: (issue, ctx) => ({ message: 'Currency is required' })}),
-  
-    // Usage Preferences
-    usagePreferences: z.enum(['Personal', 'Business', 'Testing', 'Other'], {errorMap: (issue, ctx) => ({ message: 'Usage Preferences is required' })}),
   });
 
   export type OnboardingFormValuesType = z.infer<typeof onboardingSchema>;

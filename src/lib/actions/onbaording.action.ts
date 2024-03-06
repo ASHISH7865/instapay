@@ -15,8 +15,6 @@ export async function onboardUser(userId: string, data: OnboardingFormValuesType
     if (user) {
       throw new Error("User already onboarded");
     }
-    // hash wallet pin
-    const hashedPin = await bcrypt.hash(data.walletSecurityPreferences.value, SALT);
 
      await prisma.userInfo.create({
       data: {
@@ -31,15 +29,6 @@ export async function onboardUser(userId: string, data: OnboardingFormValuesType
         gender: data.gender,
         username: data.username,
         phoneNumber: data.phoneNumbers,
-        wallet: {
-          create: {
-            balance: 0,
-            currencyPreference: "INR",
-            walletPasswordType: "PIN",
-            walletPin: hashedPin,
-            usagePreference: "Personal",
-          },
-        },
       },
     });
     return {

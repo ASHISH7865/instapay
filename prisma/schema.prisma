@@ -27,17 +27,13 @@ model UserInfo {
   setupCompleted        Boolean       @default(false)
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
-  // Relationships
-  transactionsSent      Transaction[] @relation("Sender")
-  transactionsReceived  Transaction[] @relation("Recipient")
-  beneficiaries         Beneficiary[] // Relationship with beneficiaries
+  // Relationships with wallet should  be one to one
   wallet                Wallet?
 }
 
 model Wallet {
   id                 String   @id @default(uuid())
-  userId             String   @unique
-  userInfo           UserInfo @relation(fields: [userId], references: [userId])
+  walletUniqueName   String   @unique
   balance            Float
   walletPasswordType String
   walletPin          String
@@ -45,6 +41,13 @@ model Wallet {
   usagePreference    String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+  transactionLimit   Float
+  // Define foreign keys and relationships
+  user               UserInfo @relation(fields: [userId], references: [id])
+  userId             String   @unique
+
+  // relationships with transaction should be one to many
+  transactions       Transaction[]
 }
 
 // Define the Transaction table
@@ -65,23 +68,11 @@ model Transaction {
   updatedAt   DateTime @updatedAt
 
   // Define foreign keys and relationships
-  sender    UserInfo @relation("Sender", fields: [senderId], references: [id])
-  recipient UserInfo @relation("Recipient", fields: [recipientId], references: [id])
+  wallet       Wallet @relation(fields: [walletId], references: [id])
+  walletId     String
+
 }
 
-model Beneficiary {
-  id            String   @id @default(uuid())
-  userId        String   @unique
-  beneficiaryId String   @unique
-  name          String
-  email         String   @db.VarChar(255) // Encrypt this field
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  // Relationships
-  user          UserInfo @relation(fields: [beneficiaryId], references: [userId]) // Relationship with user
-}
-
-// Enum for Transaction Type
 enum TransactionType {
   DEBIT
   CREDIT

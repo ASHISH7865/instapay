@@ -12,12 +12,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { buttonVariants } from "../../ui/button";
+import { buttonVariants } from "../ui/button";
 import { Menu , Wallet2 } from "lucide-react";
-import { ModeToggle } from "../../shared/mode-toggle";
-import { LogoIcon } from "./Icons";
+import { ModeToggle } from "../shared/mode-toggle";
 import Link from "next/link";
 
 interface RouteProps {

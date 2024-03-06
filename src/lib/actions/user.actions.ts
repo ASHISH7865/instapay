@@ -48,26 +48,6 @@ export async function updateUserOnboardingStatus(userId: string) {
   }
 }
 
-export async function createUserInfo({ email, userId, username }: IUserInfo) {
-  try {
-    const user = await prisma.userInfo.create({
-      data: {
-        email: email,
-        userId: userId,
-        username: username,
-        setupCompleted: false,
-        balance: 0,
-      },
-    });
-    return {
-      message: "User info created successfully",
-      user: user,
-    };
-  } catch (error) {
-    throw new Error("Error creating user info");
-  }
-}
-
 export async function checkUserExists(userId: string) {
   try {
     const user = await prisma.userInfo.findUnique({

@@ -15,7 +15,7 @@ interface AllBeneficiaryProps {
   beneficiaries: BeneficiaryData[];
 }
 
-const AllBeneficiary = ({ beneficiaries }: AllBeneficiaryProps) => {
+const AllBeneficiary = ({ beneficiaries } : AllBeneficiaryProps) => {
 
   const [loading, setLoading] = useState(false);
   const [beneficiariesData, setBeneficiariesData] = useState<BeneficiaryData[]>(beneficiaries);

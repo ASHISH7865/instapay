@@ -32,13 +32,6 @@ const defaultValues: OnboardingFormValuesType = {
     postalCode: "",
     stateOrProvince: "",
   },
-  walletSecurityPreferences: {
-    passwordType: "PIN",
-    value: "",
-  },
-  currencyPreferences: "INR",
-  usagePreferences: "Personal"
-
 }
 
 const OnboardingForm = () => {
@@ -99,12 +92,6 @@ const OnboardingForm = () => {
         postalCode: "",
         stateOrProvince: "",
       },
-      walletSecurityPreferences: {
-        passwordType: "PIN",
-        value: "",
-      },
-      currencyPreferences: "INR",
-      usagePreferences: "Personal"
     })
   }, [user])
 
@@ -261,94 +248,6 @@ const OnboardingForm = () => {
                   <FormLabel>Postal Code</FormLabel>
                   <FormControl>
                     <Input placeholder="postal code" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-        </Card>
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Wallet Configuration</CardTitle>
-            <CardDescription>Set up your wallet security preferences</CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="walletSecurityPreferences.passwordType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password Type</FormLabel>
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue>{field.value}</SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pin">PIN</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="walletSecurityPreferences.value"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>PIN</FormLabel>
-                  <FormControl>
-                    <Input placeholder="security text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="currencyPreferences"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Currency</FormLabel>
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue>{field.value}</SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="USD">USD</SelectItem>
-                        <SelectItem value="EUR">EUR</SelectItem>
-                        <SelectItem value="GBP">GBP</SelectItem>
-                        <SelectItem value="INR">INR</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="usagePreferences"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type of Usage</FormLabel>
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue>{field.value}</SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Personal">Personal</SelectItem>
-                        <SelectItem value="Business">Business</SelectItem>
-                        <SelectItem value="Testing">Testing</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

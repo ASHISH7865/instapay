@@ -1,22 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { BreadcrumbItem, Breadcrumbs } from "@/components/ui/breadcrumb";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Plus, Wallet2 } from "lucide-react";
 import WalletPinModal from "@/components/modal/wallet-pin-modal";
 import AddMoney from "@/components/modal/add-money";
 import { Badge } from "@/components/ui/badge";
+import CreateWalletOverlay from "@/components/shared/CreateWalletOverlay";
 
 const Wallet = () => {
   const INR_SYMBOL = "₹";
+
   const [balance, setBalance] = useState(1200.0);
   const [hideBalance, setHideBalance] = useState(true);
 
@@ -29,10 +25,11 @@ const Wallet = () => {
     { transactionId: "6", type: "debit", amount: 200, status: "failed" },
     { transactionId: "7", type: "credit", amount: 500, status: "success" },
     { transactionId: "8", type: "debit", amount: 100, status: "success" },
-  ]
+  ];
 
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col p-4 relative">
+     
       <Breadcrumbs>
         <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
         <BreadcrumbItem href="/dashboard/Wallet">Wallet</BreadcrumbItem>
@@ -52,9 +49,7 @@ const Wallet = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold">
-                {hideBalance ? "****" : `${INR_SYMBOL} ${balance}`}
-              </div>
+              <div className="text-4xl font-bold">{hideBalance ? "****" : `${INR_SYMBOL} ${balance}`}</div>
             </CardContent>
             <CardFooter className="flex justify-end">
               <WalletPinModal />
@@ -63,33 +58,33 @@ const Wallet = () => {
         </div>
       </div>
       <div className="mt-5">
-      <Table className="w-full">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="">Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+        <Table className="w-full">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="">Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {walletTransactions.map((item) => (
-                <TableRow key={item.transactionId}>
+              <TableRow key={item.transactionId}>
                 <TableCell className="font-medium">{item.transactionId}</TableCell>
                 <TableCell>{item.type}</TableCell>
                 <TableCell>
-                    <Badge>Active</Badge>
+                  <Badge>Active</Badge>
                 </TableCell>
                 <TableCell className="flex justify-end gap-2">
-                    <Button variant="secondary">View</Button>
-                    <Button variant="default">Delete</Button>
+                  <Button variant="secondary">View</Button>
+                  <Button variant="default">Delete</Button>
                 </TableCell>
-                </TableRow>
+              </TableRow>
             ))}
-        </TableBody>
-      </Table>
-
+          </TableBody>
+        </Table>
       </div>
+      <CreateWalletOverlay />
     </div>
   );
 };

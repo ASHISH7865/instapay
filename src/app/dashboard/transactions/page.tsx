@@ -3,6 +3,7 @@ import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { Trash2 } from 'lucide-react';
+import CreateWalletOverlay from '@/components/shared/CreateWalletOverlay';
 const transactions = [
   { transactionId: "1", type: "credit", amount: 1000, status: "success" },
   { transactionId: "2", type: "debit", amount: 200, status: "failed" },
@@ -16,7 +17,7 @@ const transactions = [
 
 const Transactions = () => {
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col p-4 relative ">
     <Breadcrumbs>
     <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
       <BreadcrumbItem href="/dashboard/transactions">Transaction</BreadcrumbItem>
@@ -48,6 +49,7 @@ const Transactions = () => {
       </Table>
 
       </div>
+      <CreateWalletOverlay />
   </div>
   )
 }

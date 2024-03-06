@@ -1,5 +1,5 @@
 'use client';
-import Sidebar from "@/components/pages/dashboard/sidebar";
+import Sidebar from "@/components/shared/sidebar";
 import { ModeToggle } from "@/components/shared/mode-toggle";
 import { ThemeCustomizer } from "@/components/shared/theme-customizer";
 import { useAuth } from "@clerk/nextjs";
@@ -25,16 +25,16 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <div className="flex h-screen bg-background">
-      <div className="w-64">
+      <div className="w-64 h-[calc(100vh-16px)] bg-primary-800 border-r border-primary-700 transition-colors duration-300">
         <Sidebar />
       </div>
       <div className="flex-1  transition-colors duration-300 p-2">
-        <div className=" bg-transparent  border h-[calc(100vh-16px)] rounded-md">
-          <div className="flex justify-end items-center p-4 ">
+        <div className=" bg-transparent  h-[calc(100vh-20px)] rounded-md">
+          <div className="flex justify-end items-center p-4">
             <ModeToggle />
             <ThemeCustomizer  />
           </div>
-          <div className="relative">
+          <div className="relative  overflow-auto">
             {children}
           </div>
         </div>
