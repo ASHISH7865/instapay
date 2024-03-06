@@ -14,7 +14,8 @@ const CurrencySymbols :Record<CurrencyCode , string> = {
 }
 
 const CheckBalance = () => {
- const {balance , currentCurrency} = useWalletContext();
+ const {balance , userWallet} = useWalletContext();
+ console.log("balance", userWallet);
  
   return (
     <div className="mt-5">
@@ -26,7 +27,9 @@ const CheckBalance = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-4xl font-bold">{balance === undefined ? "****" : `${CurrencySymbols[currentCurrency]} ${balance}`}</div>
+          <div className="text-4xl font-bold">
+            {balance === undefined ? 
+            "****" : userWallet && `${CurrencySymbols[userWallet?.currencyPreference as CurrencyCode]} ${balance}`}</div>
         </CardContent>
         <CardFooter className="flex justify-end">
          { balance === undefined &&

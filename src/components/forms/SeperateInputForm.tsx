@@ -14,7 +14,7 @@ const SeperateInput = ({ numberOfInput, close }: { numberOfInput: number; close?
   const [loading, setLoading] = useState(false);
   const pinBoxRef = React.useRef<HTMLInputElement[]>([]);
   const {userId} = useAuth();
-  const {setBalance , setCurrentCurrency} = useWalletContext();
+  const {setBalance } = useWalletContext();
 
 
   function handleChange(value: string, index: number) {
@@ -49,7 +49,6 @@ const SeperateInput = ({ numberOfInput, close }: { numberOfInput: number; close?
           setLoading(false);
         } else {
           setBalance(res?.balance || 0);
-          setCurrentCurrency(res?.currency as any || "INR")
           setError(""); // Clear any previous error
           setLoading(false);
           if (close) {

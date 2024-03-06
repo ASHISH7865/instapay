@@ -5,6 +5,7 @@ import { ThemeCustomizer } from "@/components/shared/theme-customizer";
 import { useAuth } from "@clerk/nextjs";
 import { checkUserExists } from "@/lib/actions/user.actions";
 import React, { useEffect } from "react";
+import { WalletContextProvider } from "@/provider/wallet-provider";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -35,7 +36,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <ThemeCustomizer  />
           </div>
           <div className="relative  overflow-auto">
+            <WalletContextProvider>
             {children}
+            </WalletContextProvider>
           </div>
         </div>
       </div>

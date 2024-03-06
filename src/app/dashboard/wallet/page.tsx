@@ -24,7 +24,6 @@ const Wallet = () => {
 
   return (
     <div className="flex flex-col p-4 relative">
-     <WalletContextProvider>
       <Breadcrumbs>
         <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
         <BreadcrumbItem href="/dashboard/Wallet">Wallet</BreadcrumbItem>
@@ -65,7 +64,6 @@ const Wallet = () => {
         </Table>
       </div>
       <CreateWalletOverlay />
-      </WalletContextProvider>
     </div>
   );
 };

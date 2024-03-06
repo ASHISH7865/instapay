@@ -40,7 +40,7 @@ export async function createUserWallet(userId: string , data : CreateWalletType)
     
     const walletExist = await prisma.wallet.findUnique({
       where: {
-        userId: userInfo.id,
+        userId: userId,
       },
     });
     
@@ -89,22 +89,10 @@ export async function createUserWallet(userId: string , data : CreateWalletType)
 
 export async function getUserWallet(userId: string) {
   try {
-    const userInfo = await prisma.userInfo.findUnique({
-      where: {
-        userId: userId,
-      },
-    });
-
-    if (!userInfo) {
-      return {
-        status: "error",
-        message: "User not found",
-      }
-    }
-
+  
     const wallet = await prisma.wallet.findUnique({
       where: {
-        userId: userInfo.id,
+        userId: userId,
       },
     });
 
@@ -119,22 +107,9 @@ export async function getUserWallet(userId: string) {
 export async function checkWalletBalance(userId: string , pin : string) {
   try {
 
-    const userInfo = await prisma.userInfo.findUnique({
-      where:{
-        userId: userId
-      }
-    });
-
-    if (!userInfo) {
-      return {
-        status: "error",
-        message: "User not found",
-      }
-    }
-
     const wallet = await prisma.wallet.findUnique({
       where: {
-        userId: userInfo.id,
+        userId: userId,
       },
     });
 
