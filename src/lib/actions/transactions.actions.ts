@@ -8,7 +8,7 @@ import { CreateTransactionParams, Data } from '@/types/transaction.types';
 export async function checkoutWalletMoney(data : Data) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
-  const amount = Number(data.amount) * 100;
+  const amount = Number(data.amountToBeAdded) * 100;
 
   const session = await stripe.checkout.sessions.create({
     line_items:[
@@ -26,7 +26,9 @@ export async function checkoutWalletMoney(data : Data) {
     metadata:{
         transactionName : data.transactionName,
         userId : data.userId,
-        credits : data.amount,
+        balanceBefore : data.balanceBefore,
+        currentCurrency : data.currentCurrency,
+        credits : data.amountToBeAdded
     },
     mode : "payment",
     success_url : `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/wallet?success=true`,
@@ -79,20 +81,37 @@ export async function createTransactions( transaction : CreateTransactionParams)
       data :{
         transactions:{
           create:{
-            trnxType:transaction.trnxType || "CREDIT",
-            purpose:  "DEPOSIT",
+            trnxType:transaction.trnxType,
+            purpose:  transaction.purpose,
             senderId:transaction.senderId,
             recipientId:transaction.receiverId,
             amount:transaction.amount,
             balanceBefore:wallet.balance,
             balanceAfter:wallet.balance + transaction.amount,
-            status : transaction.status || "PENDING",
+            status : transaction.status,
             trnxSummary:transaction.trnxSummary,
-            summary : transaction.trnxSummary,
           }
         }
       }
     })
 
+    // step-4
+    if (newTransaction) {
+      const updatedWallet = await prisma.wallet.update({
+        where:{
+          userId: transaction.userId
+        },
+        data:{
+          balance:{
+            increment: transaction.amount
+          }
+        }
+      })
+      return {
+        status: "success",
+        message: "Transaction created successfully",
+        data: updatedWallet
+      }
+    }
     
 }

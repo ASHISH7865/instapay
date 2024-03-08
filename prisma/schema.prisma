@@ -61,8 +61,6 @@ model Transaction {
   balanceBefore Float
   balanceAfter  Float
   status        TransactionStatus  @default(PENDING)
-
-  summary     String
   trnxSummary String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

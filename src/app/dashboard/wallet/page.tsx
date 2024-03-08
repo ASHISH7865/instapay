@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { BreadcrumbItem, Breadcrumbs } from "@/components/ui/breadcrumb";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import AddMoney from "@/components/modal/add-money";
+import AddMoneyModal from "@/components/modal/add-money";
 import { Badge } from "@/components/ui/badge";
 import CreateWalletOverlay from "@/components/shared/CreateWalletOverlay";
 import CheckBalance from "./components/CheckBalance";
@@ -31,7 +31,7 @@ const Wallet = () => {
 
       <div className="mt-5 flex justify-between">
         <p className="text-2xl font-bold">Wallet Dashboard</p>
-        <AddMoney />
+        <AddMoneyModal />
       </div>
       <div className="flex gap-6">
        <CheckBalance />

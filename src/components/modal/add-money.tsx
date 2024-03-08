@@ -2,12 +2,13 @@ import React from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
+import StripeCheckout from '@/app/dashboard/wallet/components/StripeCheckout'
 
-const AddMoney = () => {
+const AddMoneyModal = () => {
   return (
     <Dialog>
     <DialogTrigger asChild>
-      <Button type="button" variant="secondary">
+      <Button type="button" variant="default">
        Add Money
       </Button>
     </DialogTrigger>
@@ -17,13 +18,10 @@ const AddMoney = () => {
             Add Money to Wallet
         </DialogTitle>
       </DialogHeader>
-        <Input type="number" placeholder="Enter Amount" />
-        <Button type="button" variant="secondary" className="mt-4">
-            Add Money
-        </Button>
+       <StripeCheckout />
     </DialogContent>
   </Dialog>
   )
 }
 
-export default AddMoney
+export default AddMoneyModal

@@ -15,7 +15,6 @@ const CurrencySymbols :Record<CurrencyCode , string> = {
 
 const CheckBalance = () => {
  const {balance , userWallet} = useWalletContext();
- console.log("balance", userWallet);
  
   return (
     <div className="mt-5">

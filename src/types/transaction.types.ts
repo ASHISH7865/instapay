@@ -1,12 +1,16 @@
 export type TransactionName = "Wallet_Top_Up" | "Wallet_Transfer" | "Wallet_Withdrawal"; 
 export type TransactionType = "CREDIT" | "DEBIT";
 export type TransactionStatus = "PENDING" | "COMPLETED" | "FAILED";
+export type TransactionPurpose = "DEPOSIT" | "WITHDRAWAL" | "TRANSFER" | "REVERSAL";
 
 export interface Data {
-    amount: number;
+    balanceBefore: number;
+    amountToBeAdded: number;
     currentCurrency: string;
     transactionName: TransactionName;
     userId : string;
+
+
 
 }
 
@@ -17,7 +21,7 @@ export interface CreateTransactionParams {
     amount : number;
     senderId : string;
     receiverId : string;
-    purpose : string;
+    purpose : TransactionPurpose;
     balanceBefore : number;
     balanceAfter : number;
     status : TransactionStatus;
