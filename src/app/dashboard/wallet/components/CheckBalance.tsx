@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wallet2 } from "lucide-react";
 import WalletPinModal from "@/components/modal/wallet-pin-modal";
@@ -14,7 +14,15 @@ const CurrencySymbols :Record<CurrencyCode , string> = {
 }
 
 const CheckBalance = () => {
- const {balance , userWallet} = useWalletContext();
+ const {balance , userWallet , setBalance} = useWalletContext();
+
+ useEffect(()=>{
+  const timeoutId = setTimeout(() => {
+    setBalance(undefined);
+  }, 10000);
+
+  return () => clearTimeout(timeoutId);
+ },[balance])
  
   return (
     <div className="mt-5">
@@ -28,7 +36,7 @@ const CheckBalance = () => {
         <CardContent>
           <div className="text-4xl font-bold">
             {balance === undefined ? 
-            "****" : userWallet && `${CurrencySymbols[userWallet?.currencyPreference as CurrencyCode]} ${balance}`}</div>
+            "****" : userWallet && `${CurrencySymbols[userWallet?.currencyPreference as CurrencyCode]} ${userWallet?.balance}`}</div>
         </CardContent>
         <CardFooter className="flex justify-end">
          { balance === undefined &&

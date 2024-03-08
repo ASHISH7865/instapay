@@ -4,9 +4,12 @@ import { checkoutWalletMoney } from "@/lib/actions/transactions.actions";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { Data } from "@/types/transaction.types";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { useWalletContext } from "@/provider/wallet-provider";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { addMoneySchema } from "@/lib/ZodShemas/addmoneySchema";
 
 type AddMoneyFormValuesType = {
   amount: number;
@@ -19,7 +22,7 @@ const StripeCheckout = () => {
     defaultValues: {
       amount: 0,
     },
-    mode: "onBlur",
+    resolver: zodResolver(addMoneySchema),
   });
 
   useEffect(() => {
@@ -59,26 +62,26 @@ const StripeCheckout = () => {
   };
 
   return (
-    <form className="flex flex-col space-y-4" onSubmit={methods.handleSubmit((data) => handleCheckout(data))}>
-      <Controller
-        name="amount"
-        control={methods.control}
-        rules={{ required: "Amount is required" }}
-        render={({ field }) => (
-          <>
-            <Input
-              max={1000} // max amount to be added
-              type="number"
-              {...field}
-            />
-            {methods.formState.errors.amount && <p className="text-red-500">{methods.formState.errors.amount.message}</p>}
-          </>
-        )}
-      />
-      <Button type="submit" variant="secondary">
-        Add Money
-      </Button>
-    </form>
+    <Form {...methods}>
+      <form className="flex flex-col space-y-4" onSubmit={methods.handleSubmit((data) => handleCheckout(data))}>
+        <FormField
+          control={methods.control}
+          name="amount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Amount to be add</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="enter amount" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" variant="default">
+          Add Money
+        </Button>
+      </form>
+    </Form>
   );
 };
 
