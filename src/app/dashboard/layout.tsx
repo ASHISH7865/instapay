@@ -5,7 +5,8 @@ import { ThemeCustomizer } from "@/components/shared/theme-customizer";
 import { useAuth } from "@clerk/nextjs";
 import { checkUserExists } from "@/lib/actions/user.actions";
 import React, { useEffect } from "react";
-import { WalletContextProvider } from "@/provider/wallet-provider";
+import { useWalletContext } from "@/provider/wallet-provider";
+import CreateWalletOverlay from "@/components/shared/CreateWalletOverlay";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -13,16 +14,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { userId } = useAuth();
-  const [userInfoExists, setUserInfoExists] = React.useState(false);
-  
-
-  useEffect(()=> {
-    if(userId) {
-      checkUserExists(userId).then((res) => {
-        setUserInfoExists(res.userExists);
-      });
-    }
-  },[userId])
+  const {userWallet} = useWalletContext();
 
   return (
     <div className="flex h-screen bg-background">
@@ -30,15 +22,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <Sidebar />
       </div>
       <div className="flex-1  transition-colors duration-300 p-2">
-        <div className=" bg-transparent  h-[calc(100vh-20px)] rounded-md">
-          <div className="flex justify-end items-center p-4">
-            <ModeToggle />
-            <ThemeCustomizer  />
-          </div>
-          <div className="relative  overflow-auto">
-            <WalletContextProvider>
-            {children}
-            </WalletContextProvider>
+        <div className=" bg-transparent  rounded-md">
+          <div className="relative h-[calc(100vh-16px)]  overflow-auto   dark:bg-dot-white/[0.1] bg-dot-black/[0.2] ">
+            {
+              userWallet ? children : <CreateWalletOverlay />
+            }
           </div>
         </div>
       </div>

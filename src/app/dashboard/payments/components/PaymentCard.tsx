@@ -1,3 +1,4 @@
+import PaymentActionModal from "@/components/modal/payment-action-modal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -22,9 +23,7 @@ const PaymentCard = ({ title, buttonText, description, transactionLimit }: Payme
           </CardContent>
         </CardHeader>
         <CardFooter className="flex justify-center">
-          <Button type="button" variant="secondary">
-            {buttonText}
-          </Button>
+         <PaymentActionModal title={title} description={description} buttonText={buttonText} transactionLimit={transactionLimit} />
         </CardFooter>
       </Card>
   );

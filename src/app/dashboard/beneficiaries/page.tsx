@@ -20,7 +20,6 @@ const Beneficiary = async () => {
       <div className="mt-5">
           {/* <AllBeneficiary beneficiaries={{}} /> */}
       </div>
-      <CreateWalletOverlay />
     </div>
   );
 };
