@@ -1,21 +1,21 @@
-'use client'
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu";
+} from '@/components/ui/navigation-menu';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { buttonVariants } from "../ui/button";
-import { Menu , Wallet2 } from "lucide-react";
-import { ModeToggle } from "../shared/mode-toggle";
-import Link from "next/link";
+} from '@/components/ui/sheet';
+import { buttonVariants } from '../ui/button';
+import { Menu, Wallet2 } from 'lucide-react';
+import { ModeToggle } from '../shared/mode-toggle';
+import Link from 'next/link';
 
 interface RouteProps {
   href: string;
@@ -24,20 +24,20 @@ interface RouteProps {
 
 const routeList: RouteProps[] = [
   {
-    href: "#features",
-    label: "Features",
+    href: '#features',
+    label: 'Features',
   },
   {
-    href: "#testimonials",
-    label: "Testimonials",
+    href: '#testimonials',
+    label: 'Testimonials',
   },
   {
-    href: "#pricing",
-    label: "Pricing",
+    href: '#pricing',
+    label: 'Pricing',
   },
   {
-    href: "#faq",
-    label: "FAQ",
+    href: '#faq',
+    label: 'FAQ',
   },
 ];
 
@@ -61,19 +61,15 @@ export const Navbar = () => {
           <span className="flex md:hidden">
             <ModeToggle />
 
-            <Sheet
-              open={isOpen}
-              onOpenChange={setIsOpen}
-            >
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger className="px-2">
                 <Menu
                   className="flex md:hidden h-5 w-5"
                   onClick={() => setIsOpen(true)}
-                >
-                </Menu>
+                ></Menu>
               </SheetTrigger>
 
-              <SheetContent side={"left"}>
+              <SheetContent side={'left'}>
                 <SheetHeader>
                   <SheetTitle className="font-bold text-xl">
                     Shadcn/React
@@ -85,16 +81,15 @@ export const Navbar = () => {
                       key={label}
                       href={href}
                       onClick={() => setIsOpen(false)}
-                      className={buttonVariants({ variant: "ghost" })}
+                      className={buttonVariants({ variant: 'ghost' })}
                     >
                       {label}
                     </a>
                   ))}
                   <Link
                     href="/sign-in"
-                  
                     className={`w-[110px] border ${buttonVariants({
-                      variant: "default",
+                      variant: 'default',
                     })}`}
                   >
                     Sign in
@@ -111,7 +106,7 @@ export const Navbar = () => {
                 href={route.href}
                 key={i}
                 className={`text-[17px] ${buttonVariants({
-                  variant: "ghost",
+                  variant: 'ghost',
                 })}`}
               >
                 {route.label}
@@ -121,14 +116,13 @@ export const Navbar = () => {
 
           <div className="hidden md:flex gap-2">
             <Link
-                    href="/sign-in"
-                  
-                    className={`w-[110px] border ${buttonVariants({
-                      variant: "default",
-                    })}`}
-                  >
-                    Sign in
-                  </Link>
+              href="/sign-in"
+              className={`w-[110px] border ${buttonVariants({
+                variant: 'default',
+              })}`}
+            >
+              Sign in
+            </Link>
 
             <ModeToggle />
           </div>

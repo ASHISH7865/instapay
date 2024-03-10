@@ -1,17 +1,33 @@
-"use client";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "@clerk/nextjs";
-import { useToast } from "../ui/use-toast";
-import { Form, FormField, FormLabel, FormControl, FormItem, FormMessage } from "@/components/ui/form";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import Spinner from "../shared/spinner";
-import { TermAndCondition } from "../modal/term-condition";
-import { CreateWalletType, createWalletSchema } from "@/lib/ZodShemas/createWalletSchema";
-import { createUserWallet } from "@/lib/actions/wallet.actions";
+'use client';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '@clerk/nextjs';
+import { useToast } from '../ui/use-toast';
+import {
+  Form,
+  FormField,
+  FormLabel,
+  FormControl,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import Spinner from '../shared/spinner';
+import { TermAndCondition } from '../modal/term-condition';
+import {
+  CreateWalletType,
+  createWalletSchema,
+} from '@/lib/ZodShemas/createWalletSchema';
+import { createUserWallet } from '@/lib/actions/wallet.actions';
 
 interface CreateWalletFormProps {
   close: () => void;
@@ -25,11 +41,11 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
   const form = useForm<CreateWalletType>({
     resolver: zodResolver(createWalletSchema),
     defaultValues: {
-      governmentId: "",
-      walletName: "",
-      walletPin: "",
-      walletType: "personal",
-      walletCurrency: "INR",
+      governmentId: '',
+      walletName: '',
+      walletPin: '',
+      walletType: 'personal',
+      walletCurrency: 'INR',
     },
   });
 
@@ -38,31 +54,34 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
       setWalletLoading(true);
       const response = await createUserWallet(userId, data);
       setWalletLoading(false);
-      if (response?.status === "success") {
+      if (response?.status === 'success') {
         toast({
-          title: "Create Wallet Success",
-          variant: "default",
+          title: 'Create Wallet Success',
+          variant: 'default',
         });
         close();
       } else {
         toast({
-          title: "Create Wallet Failed",
+          title: 'Create Wallet Failed',
           description: response?.message,
-          variant: "destructive",
+          variant: 'destructive',
         });
       }
     } else {
       toast({
-        title: "User Not Fount or you are not logged in",
-        description: "Please login to continue",
-        variant: "destructive",
+        title: 'User Not Fount or you are not logged in',
+        description: 'Please login to continue',
+        variant: 'destructive',
       });
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1  gap-4 w-full  my-10">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid grid-cols-1  gap-4 w-full  my-10"
+      >
         <FormField
           control={form.control}
           name="walletName"
@@ -142,15 +161,30 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
             <FormItem>
               <FormLabel>Wallet Pin</FormLabel>
               <FormControl>
-                <Input autoComplete="new-password" maxLength={6} minLength={6} type="password" placeholder="enter wallet pin" {...field} />
+                <Input
+                  autoComplete="new-password"
+                  maxLength={6}
+                  minLength={6}
+                  type="password"
+                  placeholder="enter wallet pin"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button variant={"secondary"} type="submit" className="w-[200px] m-auto ">
-          {walletLoading ? <Spinner className="w-6 h-6 text-primary" /> : "Submit"}
+        <Button
+          variant={'secondary'}
+          type="submit"
+          className="w-[200px] m-auto "
+        >
+          {walletLoading ? (
+            <Spinner className="w-6 h-6 text-primary" />
+          ) : (
+            'Submit'
+          )}
         </Button>
         <p className="text-center text-sm text-gray-500">
           By clicking the submit button, you agree to our <TermAndCondition />

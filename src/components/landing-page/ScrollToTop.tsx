@@ -1,13 +1,13 @@
-'use client'
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowUpToLine } from "lucide-react";
+'use client';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { ArrowUpToLine } from 'lucide-react';
 
 export const ScrollToTop = () => {
   const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
-    window.addEventListener("scroll", () => {
+    window.addEventListener('scroll', () => {
       if (window.scrollY > 400) {
         setShowTopBtn(true);
       } else {

@@ -1,11 +1,11 @@
 'use client';
-import React, { useEffect } from "react";
-import PageHeader from "@/components/shared/PageHeader";
-import OnboardingForm from "@/components/forms/OnboardingForm";
-import { useAuth } from "@clerk/nextjs";
-import { getUserInfo } from "@/lib/actions/onbaording.action";
-import Spinner from "@/components/shared/spinner";
-import { useRouter } from "next/navigation";
+import React, { useEffect } from 'react';
+import PageHeader from '@/components/shared/PageHeader';
+import OnboardingForm from '@/components/forms/OnboardingForm';
+import { useAuth } from '@clerk/nextjs';
+import { getUserInfo } from '@/lib/actions/onbaording.action';
+import Spinner from '@/components/shared/spinner';
+import { useRouter } from 'next/navigation';
 
 const Onboarding = () => {
   const { userId, isLoaded } = useAuth();
@@ -16,7 +16,7 @@ const Onboarding = () => {
   useEffect(() => {
     if (userId) {
       setLoading(true);
-      getUserInfo(userId).then((res) => {
+      getUserInfo(userId).then(res => {
         if (res) {
           setUserInfoExist(true);
         } else {
@@ -29,7 +29,7 @@ const Onboarding = () => {
 
   useEffect(() => {
     if (!loading && userInfoExist) {
-      router.push("/dashboard");
+      router.push('/dashboard');
     }
   }, [loading, userInfoExist, router]);
 
@@ -38,13 +38,15 @@ const Onboarding = () => {
   }
 
   return (
-    !userInfoExist && <div className="flex flex-col items-center justify-center w-[80%]">
-      <PageHeader
-        title="Setting up your account"
-        description="Just a few more steps to get started"
-      />
-      <OnboardingForm />
-    </div>
+    !userInfoExist && (
+      <div className="flex flex-col items-center justify-center w-[80%]">
+        <PageHeader
+          title="Setting up your account"
+          description="Just a few more steps to get started"
+        />
+        <OnboardingForm />
+      </div>
+    )
   );
 };
 

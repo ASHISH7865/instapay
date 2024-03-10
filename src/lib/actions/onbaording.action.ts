@@ -1,11 +1,14 @@
-"use server";
-import prisma from "@/lib/prisma";
-import { OnboardingFormValuesType } from "../ZodShemas/onboardingSchema";
-import bcrypt from "bcrypt";
+'use server';
+import prisma from '@/lib/prisma';
+import { OnboardingFormValuesType } from '../ZodShemas/onboardingSchema';
+import bcrypt from 'bcrypt';
 
 const SALT = 10;
 
-export async function onboardUser(userId: string, data: OnboardingFormValuesType) {
+export async function onboardUser(
+  userId: string,
+  data: OnboardingFormValuesType,
+) {
   try {
     const user = await prisma.userInfo.findUnique({
       where: {
@@ -13,10 +16,10 @@ export async function onboardUser(userId: string, data: OnboardingFormValuesType
       },
     });
     if (user) {
-      throw new Error("User already onboarded");
+      throw new Error('User already onboarded');
     }
 
-     await prisma.userInfo.create({
+    await prisma.userInfo.create({
       data: {
         userId: userId,
         firstName: data.firstName,
@@ -32,25 +35,25 @@ export async function onboardUser(userId: string, data: OnboardingFormValuesType
       },
     });
     return {
-        message : "User onboarded successfully",
-    }
-  } catch (err : any) {
+      message: 'User onboarded successfully',
+    };
+  } catch (err: any) {
     throw new Error(err);
   }
 }
 
 export async function getUserInfo(userId: string) {
-    try {
-        const user = await prisma.userInfo.findUnique({
-        where: {
-            userId: userId,
-        },
-        });
-        if (!user) {
-            return false;
-        }
-        return true;
-    } catch (err : any) {
-        throw new Error(err);
+  try {
+    const user = await prisma.userInfo.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
+    if (!user) {
+      return false;
     }
+    return true;
+  } catch (err: any) {
+    throw new Error(err);
+  }
 }

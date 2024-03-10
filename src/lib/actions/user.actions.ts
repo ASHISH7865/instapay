@@ -1,5 +1,5 @@
-"use server";
-import prisma from "@/lib/prisma";
+'use server';
+import prisma from '@/lib/prisma';
 
 export interface IUserInfo {
   email: string;
@@ -18,7 +18,7 @@ export interface User {
 
 export async function updateUserOnboardingStatus(userId: string) {
   try {
-    // Update user info to set setupCompleted to true 
+    // Update user info to set setupCompleted to true
     // 1. Find user info by userId and check if it exists
     const user = await prisma.userInfo.findUnique({
       where: {
@@ -27,8 +27,8 @@ export async function updateUserOnboardingStatus(userId: string) {
     });
     if (!user) {
       return {
-        message: "User info not found",
-      }
+        message: 'User info not found',
+      };
     }
     // 2. Update user info to set setupCompleted to true
     const updatedUser = await prisma.userInfo.update({
@@ -40,11 +40,11 @@ export async function updateUserOnboardingStatus(userId: string) {
       },
     });
     return {
-      message: "User onboarding process completed successfully",
+      message: 'User onboarding process completed successfully',
       user: updatedUser,
     };
   } catch (error) {
-    throw new Error("Error getting user onboarding status");
+    throw new Error('Error getting user onboarding status');
   }
 }
 
@@ -58,28 +58,28 @@ export async function checkUserExists(userId: string) {
     if (user) {
       return {
         userExists: true,
-        user : user
+        user: user,
       };
     } else {
       return {
         userExists: false,
-        user : null
+        user: null,
       };
     }
   } catch (error) {
     console.log(error);
-    throw new Error("Error checking if user exists");
+    throw new Error('Error checking if user exists');
   }
 }
 
-export async function getAllUserInfo(){
+export async function getAllUserInfo() {
   try {
     const users = await prisma.userInfo.findMany();
     return {
-      message: "Users fetched successfully",
+      message: 'Users fetched successfully',
       data: users,
     };
   } catch (error) {
-    throw new Error("Error fetching users");
+    throw new Error('Error fetching users');
   }
 }

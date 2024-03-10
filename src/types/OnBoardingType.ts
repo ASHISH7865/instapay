@@ -4,13 +4,13 @@ export type OnboardingFormValuesType = {
   lastName: string;
   dateOfBirth: string;
   primaryEmailAddresses: string;
-  gender: "male" | "female" | "other" ;
+  gender: 'male' | 'female' | 'other';
   phoneNumbers: string;
   addresses: Address;
 
   walletSecurityPreferences: WalletSecurityPreferences;
   currencyPreferences: Currency;
-  usagePreferences: "Personal" | "Business" | "Testing" | "Other";
+  usagePreferences: 'Personal' | 'Business' | 'Testing' | 'Other';
 };
 
 interface Address {
@@ -22,9 +22,8 @@ interface Address {
 }
 
 interface WalletSecurityPreferences {
-  passwordType: "PIN" ;
+  passwordType: 'PIN';
   value: string;
 }
 
-type Currency = "USD" | "EUR" | "GBP" | "INR" | "Other"; // Add more supported currencies as needed
-
+type Currency = 'USD' | 'EUR' | 'GBP' | 'INR' | 'Other'; // Add more supported currencies as needed

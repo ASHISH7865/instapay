@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { ChevronRight } from "lucide-react"
+import { ChevronRight } from 'lucide-react';
 import {
   Breadcrumb,
   BreadcrumbProps,
@@ -8,23 +8,23 @@ import {
   BreadcrumbsProps,
   Link,
   LinkProps,
-} from "react-aria-components"
+} from 'react-aria-components';
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils';
 
-import { buttonVariants } from "./button"
+import { buttonVariants } from './button';
 
 const _Breadcrumbs = <T extends object>({
   className,
   ...props
 }: BreadcrumbsProps<T>) => (
-  <Breadcrumbs className={cn("flex flex-wrap", className)} {...props} />
-)
-interface BreadcrumbItemProps extends Omit<BreadcrumbProps, "children"> {
-  linkClassName?: LinkProps["className"]
-  href?: LinkProps["href"]
-  linkProps?: Omit<LinkProps, "className" | "href" | "children">
-  children?: LinkProps["children"]
+  <Breadcrumbs className={cn('flex flex-wrap', className)} {...props} />
+);
+interface BreadcrumbItemProps extends Omit<BreadcrumbProps, 'children'> {
+  linkClassName?: LinkProps['className'];
+  href?: LinkProps['href'];
+  linkProps?: Omit<LinkProps, 'className' | 'href' | 'children'>;
+  children?: LinkProps['children'];
 }
 
 const BreadcrumbItem = ({
@@ -35,20 +35,20 @@ const BreadcrumbItem = ({
   children,
   ...props
 }: BreadcrumbItemProps) => (
-  <Breadcrumb className={cn("flex items-center", className)} {...props}>
+  <Breadcrumb className={cn('flex items-center', className)} {...props}>
     <Link
-      className={(values) =>
+      className={values =>
         cn(
           buttonVariants({
-            variant: "link",
-            className: "data-[disabled]:opacity-100 ",
+            variant: 'link',
+            className: 'data-[disabled]:opacity-100 ',
           }),
-          "peer p-1 opacity-50",
-          "data-[disabled]:opacity-100",
-          "text-foreground",
-          typeof linkClassName === "function"
+          'peer p-1 opacity-50',
+          'data-[disabled]:opacity-100',
+          'text-foreground',
+          typeof linkClassName === 'function'
             ? linkClassName(values)
-            : linkClassName
+            : linkClassName,
         )
       }
       href={href}
@@ -61,6 +61,6 @@ const BreadcrumbItem = ({
       className="h-4 w-4 peer-data-[current]:hidden"
     />
   </Breadcrumb>
-)
+);
 
-export { _Breadcrumbs as Breadcrumbs, BreadcrumbItem }
+export { _Breadcrumbs as Breadcrumbs, BreadcrumbItem };

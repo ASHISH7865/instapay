@@ -1,15 +1,22 @@
-import { useToast } from "@/components/ui/use-toast";
-import { loadStripe } from "@stripe/stripe-js";
-import { checkoutWalletMoney } from "@/lib/actions/transactions.actions";
-import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
-import { Data } from "@/types/transaction.types";
-import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { useWalletContext } from "@/provider/wallet-provider";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { addMoneySchema } from "@/lib/ZodShemas/addmoneySchema";
+import { useToast } from '@/components/ui/use-toast';
+import { loadStripe } from '@stripe/stripe-js';
+import { checkoutWalletMoney } from '@/lib/actions/transactions.actions';
+import { Button } from '@/components/ui/button';
+import { useEffect } from 'react';
+import { Data } from '@/types/transaction.types';
+import { useForm } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
+import { useWalletContext } from '@/provider/wallet-provider';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { addMoneySchema } from '@/lib/ZodShemas/addmoneySchema';
 
 type AddMoneyFormValuesType = {
   amount: number;
@@ -32,20 +39,19 @@ const StripeCheckout = () => {
   useEffect(() => {
     // check to see if this is a redirect back from Checkout
     const query = new URLSearchParams(window.location.search);
-    console.log(window.location.search);
-    if (query.get("success")) {
+    if (query.get('success')) {
       toast({
-        title: "Transaction Completed",
-        variant: "default",
-        className: "bg-green-500",
+        title: 'Transaction Completed',
+        variant: 'default',
+        className: 'bg-green-500',
       });
     }
 
-    if (query.get("canceled")) {
+    if (query.get('canceled')) {
       toast({
-        title: "Transaction Canceled",
-        variant: "default",
-        className: "bg-red-500",
+        title: 'Transaction Canceled',
+        variant: 'default',
+        className: 'bg-red-500',
       });
     }
   }, []);
@@ -54,7 +60,7 @@ const StripeCheckout = () => {
     const data: Data = {
       amountToBeAdded: formData.amount,
       currentCurrency: userWallet?.currencyPreference!,
-      transactionName: "Wallet_Top_Up",
+      transactionName: 'Wallet_Top_Up',
       userId: userWallet?.userId!,
       balanceBefore: userWallet?.balance!,
     };
@@ -63,7 +69,10 @@ const StripeCheckout = () => {
 
   return (
     <Form {...methods}>
-      <form className="flex flex-col space-y-4" onSubmit={methods.handleSubmit((data) => handleCheckout(data))}>
+      <form
+        className="flex flex-col space-y-4"
+        onSubmit={methods.handleSubmit(data => handleCheckout(data))}
+      >
         <FormField
           control={methods.control}
           name="amount"

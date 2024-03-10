@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -6,9 +6,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Facebook, Instagram, Linkedin } from "lucide-react";
-import Image from "next/image";
+} from '@/components/ui/card';
+import { Facebook, Instagram, Linkedin } from 'lucide-react';
+import Image from 'next/image';
 
 interface TeamProps {
   imageUrl: string;
@@ -24,59 +24,59 @@ interface SociaNetworkslProps {
 
 const teamList: TeamProps[] = [
   {
-    imageUrl: "https://i.pravatar.cc/150?img=35",
-    name: "Emma Smith",
-    position: "Product manager",
+    imageUrl: 'https://i.pravatar.cc/150?img=35',
+    name: 'Emma Smith',
+    position: 'Product manager',
     socialNetworks: [
-      { name: "Linkedin", url: "http://linkedin.com" },
+      { name: 'Linkedin', url: 'http://linkedin.com' },
       {
-        name: "Facebook",
-        url: "https://www.facebook.com/",
+        name: 'Facebook',
+        url: 'https://www.facebook.com/',
       },
       {
-        name: "Instagram",
-        url: "https://www.instagram.com/",
+        name: 'Instagram',
+        url: 'https://www.instagram.com/',
       },
     ],
   },
   {
-    imageUrl: "https://i.pravatar.cc/150?img=60",
-    name: "John Doe",
-    position: "Tech Lead",
+    imageUrl: 'https://i.pravatar.cc/150?img=60',
+    name: 'John Doe',
+    position: 'Tech Lead',
     socialNetworks: [
-      { name: "Linkedin", url: "http://linkedin.com" },
+      { name: 'Linkedin', url: 'http://linkedin.com' },
       {
-        name: "Facebook",
-        url: "https://www.facebook.com/",
+        name: 'Facebook',
+        url: 'https://www.facebook.com/',
       },
       {
-        name: "Instagram",
-        url: "https://www.instagram.com/",
+        name: 'Instagram',
+        url: 'https://www.instagram.com/',
       },
     ],
   },
   {
-    imageUrl: "https://i.pravatar.cc/150?img=36",
-    name: "Ashley Ross",
-    position: "Frontend Developer",
+    imageUrl: 'https://i.pravatar.cc/150?img=36',
+    name: 'Ashley Ross',
+    position: 'Frontend Developer',
     socialNetworks: [
-      { name: "Linkedin", url: "http://linkedin.com" },
+      { name: 'Linkedin', url: 'http://linkedin.com' },
 
       {
-        name: "Instagram",
-        url: "https://www.instagram.com/",
+        name: 'Instagram',
+        url: 'https://www.instagram.com/',
       },
     ],
   },
   {
-    imageUrl: "https://i.pravatar.cc/150?img=17",
-    name: "Bruce Rogers",
-    position: "Backend Developer",
+    imageUrl: 'https://i.pravatar.cc/150?img=17',
+    name: 'Bruce Rogers',
+    position: 'Backend Developer',
     socialNetworks: [
-      { name: "Linkedin", url: "http://linkedin.com" },
+      { name: 'Linkedin', url: 'http://linkedin.com' },
       {
-        name: "Facebook",
-        url: "https://www.facebook.com/",
+        name: 'Facebook',
+        url: 'https://www.facebook.com/',
       },
     ],
   },
@@ -85,25 +85,22 @@ const teamList: TeamProps[] = [
 export const Team = () => {
   const socialIcon = (iconName: string) => {
     switch (iconName) {
-      case "Linkedin":
+      case 'Linkedin':
         return <Linkedin size="20" />;
 
-      case "Facebook":
+      case 'Facebook':
         return <Facebook size="20" />;
 
-      case "Instagram":
+      case 'Instagram':
         return <Instagram size="20" />;
     }
   };
 
   return (
-    <section
-      id="team"
-      className="container py-24 sm:py-32"
-    >
+    <section id="team" className="container py-24 sm:py-32">
       <h2 className="text-3xl md:text-4xl font-bold">
         <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
-          Our Dedicated{" "}
+          Our Dedicated{' '}
         </span>
         Crew
       </h2>
@@ -145,8 +142,8 @@ export const Team = () => {
                       href={url}
                       target="_blank"
                       className={buttonVariants({
-                        variant: "ghost",
-                        size: "sm",
+                        variant: 'ghost',
+                        size: 'sm',
                       })}
                     >
                       <span className="sr-only">{name} icon</span>
@@ -156,7 +153,7 @@ export const Team = () => {
                 ))}
               </CardFooter>
             </Card>
-          )
+          ),
         )}
       </div>
     </section>

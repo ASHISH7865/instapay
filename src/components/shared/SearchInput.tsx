@@ -7,18 +7,22 @@ interface SearchComponentProps<T> {
   searchKeys: (keyof T)[];
 }
 
-const SearchComponent = <T,>({ data, setData, searchKeys }: SearchComponentProps<T>) => {
-    const [search, setSearch] = useState('');
-    let filteredData = data;
-    
-    return (
-        <Input
-        className="w-60"
-        placeholder="Search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        />
-    );
+const SearchComponent = <T,>({
+  data,
+  setData,
+  searchKeys,
+}: SearchComponentProps<T>) => {
+  const [search, setSearch] = useState('');
+  let filteredData = data;
+
+  return (
+    <Input
+      className="w-60"
+      placeholder="Search"
+      value={search}
+      onChange={e => setSearch(e.target.value)}
+    />
+  );
 };
 
 export default SearchComponent;

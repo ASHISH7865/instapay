@@ -1,14 +1,22 @@
-import React from 'react'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { Button } from '../ui/button'
-import CreateWalletForm from '../forms/CreateWalletForm'
+import React from 'react';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../ui/dialog';
+import { Button } from '../ui/button';
+import CreateWalletForm from '../forms/CreateWalletForm';
 
 const CreateWallet = () => {
+  const [open, setOpen] = React.useState(false);
+  const onOpenChange = () => setOpen(!open);
+  const close = () => setOpen(false);
 
-  const [open, setOpen] = React.useState(false)
-  const onOpenChange = () => setOpen(!open)
-  const close = () => setOpen(false)
-  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
@@ -18,17 +26,13 @@ const CreateWallet = () => {
       </DialogTrigger>
       <DialogContent className="">
         <DialogHeader>
-          <DialogTitle>
-            Enter Details
-          </DialogTitle>
-          <DialogDescription>
-            Fill in your wallet details
-          </DialogDescription>
+          <DialogTitle>Enter Details</DialogTitle>
+          <DialogDescription>Fill in your wallet details</DialogDescription>
         </DialogHeader>
         <CreateWalletForm close={close} />
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default CreateWallet
+export default CreateWallet;

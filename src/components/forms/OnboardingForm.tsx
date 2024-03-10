@@ -1,47 +1,65 @@
-'use client'
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useUser, useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import { getUserInfo, onboardUser } from "@/lib/actions/onbaording.action";
-import { OnboardingFormValuesType, onboardingSchema } from "@/lib/ZodShemas/onboardingSchema";
-import { useToast } from "../ui/use-toast";
-import { Form, FormField, FormLabel, FormControl, FormItem, FormMessage } from "@/components/ui/form";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Spinner from "../shared/spinner";
-import { TermAndCondition } from "../modal/term-condition";
-import { Label } from "../ui/label";
-
-
+'use client';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useUser, useAuth } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { getUserInfo, onboardUser } from '@/lib/actions/onbaording.action';
+import {
+  OnboardingFormValuesType,
+  onboardingSchema,
+} from '@/lib/ZodShemas/onboardingSchema';
+import { useToast } from '../ui/use-toast';
+import {
+  Form,
+  FormField,
+  FormLabel,
+  FormControl,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import Spinner from '../shared/spinner';
+import { TermAndCondition } from '../modal/term-condition';
+import { Label } from '../ui/label';
 
 const defaultValues: OnboardingFormValuesType = {
-  firstName: "",
-  lastName: "",
-  username: "",
-  gender: "male",
-  phoneNumbers: "",
-  primaryEmailAddresses: "",
+  firstName: '',
+  lastName: '',
+  username: '',
+  gender: 'male',
+  phoneNumbers: '',
+  primaryEmailAddresses: '',
   addresses: {
-    country: "",
-    city: "",
-    postalCode: "",
-    stateOrProvince: "",
+    country: '',
+    city: '',
+    postalCode: '',
+    stateOrProvince: '',
   },
-}
+};
 
 const OnboardingForm = () => {
   const [userLoading, setUserLoading] = React.useState(false);
-  const { userId } = useAuth()
+  const { userId } = useAuth();
   const { user, isLoaded } = useUser();
   const { toast } = useToast();
   const { push } = useRouter();
-
-
 
   const form = useForm<OnboardingFormValuesType>({
     resolver: zodResolver(onboardingSchema),
@@ -55,53 +73,52 @@ const OnboardingForm = () => {
       setUserLoading(false);
       if (response) {
         toast({
-          title: "User Onboarded Successfully",
-          variant: "default",
-
-        })
-        push("/dashboard");
-      }
-      else {
+          title: 'User Onboarded Successfully',
+          variant: 'default',
+        });
+        push('/dashboard');
+      } else {
         toast({
-          title: "User Onboarding Failed",
-          description: "Please try again",
-          variant: "destructive"
-        })
+          title: 'User Onboarding Failed',
+          description: 'Please try again',
+          variant: 'destructive',
+        });
       }
-    }
-    else {
+    } else {
       toast({
-        title: "User Not Fount or you are not logged in",
-        description: "Please login to continue",
-        variant: "destructive"
-      })
+        title: 'User Not Fount or you are not logged in',
+        description: 'Please login to continue',
+        variant: 'destructive',
+      });
     }
   };
 
   useEffect(() => {
-    if (user) form.reset({
-      firstName: user.firstName || "",
-      lastName: user.lastName || "",
-      gender: "male",
-      phoneNumbers: "",
-      username: user.username || "",
-      primaryEmailAddresses: user.primaryEmailAddress?.emailAddress || "",
-      addresses: {
-        country: "",
-        city: "",
-        postalCode: "",
-        stateOrProvince: "",
-      },
-    })
-  }, [user , form])
+    if (user)
+      form.reset({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        gender: 'male',
+        phoneNumbers: '',
+        username: user.username || '',
+        primaryEmailAddresses: user.primaryEmailAddress?.emailAddress || '',
+        addresses: {
+          country: '',
+          city: '',
+          postalCode: '',
+          stateOrProvince: '',
+        },
+      });
+  }, [user, form]);
 
   if (!isLoaded) return <Spinner className="absolute top-[50%]" />;
 
- 
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1  gap-4 w-full md:w-[600px] my-10">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid grid-cols-1  gap-4 w-full md:w-[600px] my-10"
+      >
         <Card className="w-full">
           <CardHeader>
             <CardTitle>Personal Details</CardTitle>
@@ -167,10 +184,15 @@ const OnboardingForm = () => {
                 <FormItem>
                   <FormLabel>Gender</FormLabel>
                   <FormControl>
-                    <RadioGroup className="flex gap-2" value={field.value} defaultValue={field.value} onValueChange={field.onChange}  >
+                    <RadioGroup
+                      className="flex gap-2"
+                      value={field.value}
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="male" id="male" />
-                        <Label htmlFor='male'>male</Label>
+                        <Label htmlFor="male">male</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="female" id="female" />
@@ -255,13 +277,22 @@ const OnboardingForm = () => {
             />
           </CardContent>
         </Card>
-        <Button variant={"secondary"} type="submit" className="w-[200px] m-auto ">
-          {userLoading ? <Spinner className="w-6 h-6 text-primary" /> : "Submit"}
+        <Button
+          variant={'secondary'}
+          type="submit"
+          className="w-[200px] m-auto "
+        >
+          {userLoading ? (
+            <Spinner className="w-6 h-6 text-primary" />
+          ) : (
+            'Submit'
+          )}
         </Button>
-        <p className="text-center text-sm text-gray-500">By clicking the submit button, you agree to our <TermAndCondition /></p>
+        <p className="text-center text-sm text-gray-500">
+          By clicking the submit button, you agree to our <TermAndCondition />
+        </p>
       </form>
     </Form>
-
   );
 };
 

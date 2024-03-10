@@ -1,21 +1,27 @@
-"use client";
+'use client';
 
-import { ResetIcon } from "@radix-ui/react-icons";
-import { CheckIcon, MoonIcon, Settings2, SunIcon } from "lucide-react";
-import { useTheme } from "next-themes";
-import { ListBox, ListBoxItem } from "react-aria-components";
+import { ResetIcon } from '@radix-ui/react-icons';
+import { CheckIcon, MoonIcon, Settings2, SunIcon } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { ListBox, ListBoxItem } from 'react-aria-components';
 
-import { useThemeGenerator } from "@/lib/themes/use-theme-generator";
-import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { useThemeGenerator } from '@/lib/themes/use-theme-generator';
+import { cn } from '@/lib/utils';
+import { Button, buttonVariants } from '@/components/ui/button';
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
-import { Label } from "@/components/ui/label";
+import { Label } from '@/components/ui/label';
 // TODO: Change listboxes to use radio groups
 // TODO: Fix selected key issue (^ solved by above)
 
-export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boolean; hide?: boolean }) {
+export function ThemeCustomizer({
+  hide = false,
+  shrink = false,
+}: {
+  shrink?: boolean;
+  hide?: boolean;
+}) {
   const { setTheme: setMode, resolvedTheme: mode } = useTheme();
 
   const {
@@ -34,9 +40,13 @@ export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boo
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="default" className={cn(shrink && "h-9 w-9 p-0 sm:h-9 sm:w-auto sm:px-4 sm:py-2")}>
-          <Settings2 className={cn("mr-2", shrink && "mr-0 sm:mr-2")} />
-          
+        <Button
+          variant="default"
+          className={cn(
+            shrink && 'h-9 w-9 p-0 sm:h-9 sm:w-auto sm:px-4 sm:py-2',
+          )}
+        >
+          <Settings2 className={cn('mr-2', shrink && 'mr-0 sm:mr-2')} />
         </Button>
       </SheetTrigger>
 
@@ -44,8 +54,12 @@ export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boo
         <div className="flex h-full max-h-full flex-col overflow-hidden">
           <div className="flex items-start border-b border-border pb-4">
             <div className="space-y-1 pr-2">
-              <div className="font-semibold leading-none tracking-tight">Customize</div>
-              <div className="text-xs text-muted-foreground">Pick a style and color for your components.</div>
+              <div className="font-semibold leading-none tracking-tight">
+                Customize
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Pick a style and color for your components.
+              </div>
             </div>
           </div>
           <div className="flex-1 overflow-y-auto">
@@ -59,12 +73,12 @@ export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boo
                     disallowEmptySelection
                     selectionMode="single"
                     selectedKeys={[currentGrayColor]}
-                    onSelectionChange={(key) => {
+                    onSelectionChange={key => {
                       //@ts-expect-error needs fixing
                       if (key.currentKey) updateGrayColor(key.currentKey);
                     }}
                   >
-                    {grayColors.map((theme) => {
+                    {grayColors.map(theme => {
                       return (
                         <ListBoxItem
                           textValue={theme.name}
@@ -72,23 +86,26 @@ export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boo
                           key={theme.name}
                           className={cn(
                             buttonVariants({
-                              size: "sm",
-                              variant: "outline",
-                              className: "justify-start text-xs cursor-pointer",
-                            })
+                              size: 'sm',
+                              variant: 'outline',
+                              className: 'justify-start text-xs cursor-pointer',
+                            }),
                           )}
                         >
                           {({ isSelected }) => (
                             <>
                               <span
                                 className={cn(
-                                  "mr-1 flex h-4 w-4 shrink-0 -translate-x-1 items-center justify-center rounded-full ",
-                                  theme.name
+                                  'mr-1 flex h-4 w-4 shrink-0 -translate-x-1 items-center justify-center rounded-full ',
+                                  theme.name,
                                 )}
                               >
                                 {isSelected && (
                                   <CheckIcon
-                                    className={cn("h-3 w-3 text-white", theme.name === "zinc" && "text-black")}
+                                    className={cn(
+                                      'h-3 w-3 text-white',
+                                      theme.name === 'zinc' && 'text-black',
+                                    )}
                                   />
                                 )}
                               </span>
@@ -108,7 +125,7 @@ export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boo
                     disallowEmptySelection
                     selectionMode="single"
                     selectedKeys={[currentAccentColor]}
-                    onSelectionChange={(key) => {
+                    onSelectionChange={key => {
                       //@ts-expect-error needs fixing
                       if (key.currentKey) {
                         //@ts-expect-error needs fixing
@@ -116,7 +133,7 @@ export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boo
                       }
                     }}
                   >
-                    {themes.map((theme) => {
+                    {themes.map(theme => {
                       return (
                         <ListBoxItem
                           textValue={theme.name}
@@ -124,23 +141,26 @@ export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boo
                           key={theme.name}
                           className={cn(
                             buttonVariants({
-                              variant: "outline",
-                              size: "sm",
-                              className: "justify-start cursor-pointer",
-                            })
+                              variant: 'outline',
+                              size: 'sm',
+                              className: 'justify-start cursor-pointer',
+                            }),
                           )}
                         >
                           {({ isSelected }) => (
                             <>
                               <span
                                 className={cn(
-                                  "mr-1 flex h-4 w-4 shrink-0 -translate-x-1 items-center justify-center rounded-full",
-                                  theme.name
+                                  'mr-1 flex h-4 w-4 shrink-0 -translate-x-1 items-center justify-center rounded-full',
+                                  theme.name,
                                 )}
                               >
                                 {isSelected && (
                                   <CheckIcon
-                                    className={cn("h-3 w-3 text-white", theme.name === "zinc" && "text-black")}
+                                    className={cn(
+                                      'h-3 w-3 text-white',
+                                      theme.name === 'zinc' && 'text-black',
+                                    )}
                                   />
                                 )}
                               </span>
@@ -155,16 +175,19 @@ export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boo
                 <div className="space-y-1.5">
                   <Label className="text-xs">Radius</Label>
                   <div className="grid grid-cols-5 gap-2">
-                    {borderRadius.map((value) => {
+                    {borderRadius.map(value => {
                       return (
                         <Button
-                          variant={"outline"}
+                          variant={'outline'}
                           size="sm"
                           key={value}
                           onClick={() => {
                             updateBorderRadius(value);
                           }}
-                          className={cn(currentBorderRadius === value && "border-2 border-primary")}
+                          className={cn(
+                            currentBorderRadius === value &&
+                              'border-2 border-primary',
+                          )}
                         >
                           {value}
                         </Button>
@@ -177,19 +200,23 @@ export function ThemeCustomizer({ hide = false, shrink = false }: { shrink?: boo
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     <>
                       <Button
-                        variant={"outline"}
+                        variant={'outline'}
                         size="sm"
-                        onClick={() => setMode("light")}
-                        className={cn(mode === "light" && "border-2 border-primary")}
+                        onClick={() => setMode('light')}
+                        className={cn(
+                          mode === 'light' && 'border-2 border-primary',
+                        )}
                       >
                         <SunIcon className="mr-1 h-4 w-4 -translate-x-1" />
                         Light
                       </Button>
                       <Button
-                        variant={"outline"}
+                        variant={'outline'}
                         size="sm"
-                        onClick={() => setMode("dark")}
-                        className={cn(mode === "dark" && "border-2 border-primary")}
+                        onClick={() => setMode('dark')}
+                        className={cn(
+                          mode === 'dark' && 'border-2 border-primary',
+                        )}
                       >
                         <MoonIcon className="mr-1 h-4 w-4 -translate-x-1" />
                         Dark

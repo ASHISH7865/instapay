@@ -1,8 +1,8 @@
-"use server";
-import { redirect } from "next/navigation";
-import Stripe from "stripe";
-import prisma from "../prisma";
-import { CreateTransactionParams, Data } from "@/types/transaction.types";
+'use server';
+import { redirect } from 'next/navigation';
+import Stripe from 'stripe';
+import prisma from '../prisma';
+import { CreateTransactionParams, Data } from '@/types/transaction.types';
 
 export async function checkoutWalletMoney(data: Data) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -29,7 +29,7 @@ export async function checkoutWalletMoney(data: Data) {
       currentCurrency: data.currentCurrency,
       credits: data.amountToBeAdded,
     },
-    mode: "payment",
+    mode: 'payment',
     success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/wallet?success=true`,
     cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/wallet?cancel=true`,
   });
@@ -52,8 +52,8 @@ export async function createTransactions(transaction: CreateTransactionParams) {
 
   if (!user) {
     return {
-      status: "error",
-      message: "User not found",
+      status: 'error',
+      message: 'User not found',
     };
   }
 
@@ -66,8 +66,8 @@ export async function createTransactions(transaction: CreateTransactionParams) {
 
   if (!wallet) {
     return {
-      status: "error",
-      message: "Wallet not found",
+      status: 'error',
+      message: 'Wallet not found',
     };
   }
 
@@ -106,8 +106,8 @@ export async function createTransactions(transaction: CreateTransactionParams) {
       },
     });
     return {
-      status: "success",
-      message: "Transaction created successfully",
+      status: 'success',
+      message: 'Transaction created successfully',
       data: updatedWallet,
     };
   }
@@ -121,10 +121,10 @@ export async function getWalletDepositTransactions(userId: string) {
     select: {
       transactions: {
         where: {
-          purpose: "DEPOSIT",
+          purpose: 'DEPOSIT',
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: 'desc',
         },
       },
     },
@@ -134,7 +134,6 @@ export async function getWalletDepositTransactions(userId: string) {
   };
 }
 
-
 export async function getAllTransactionsByUserId(userId: string) {
   const transactions = await prisma.wallet.findUnique({
     where: {
@@ -143,12 +142,12 @@ export async function getAllTransactionsByUserId(userId: string) {
     select: {
       transactions: {
         orderBy: {
-          createdAt: "desc",
+          createdAt: 'desc',
         },
       },
     },
   });
   return {
-    transactions : transactions?.transactions
+    transactions: transactions?.transactions,
   };
 }

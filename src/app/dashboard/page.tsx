@@ -1,6 +1,6 @@
-"use client";
-import { BreadcrumbItem, Breadcrumbs } from "@/components/ui/breadcrumb";
-import { useAuth, useUser } from "@clerk/nextjs";
+'use client';
+import { BreadcrumbItem, Breadcrumbs } from '@/components/ui/breadcrumb';
+import { useAuth, useUser } from '@clerk/nextjs';
 
 export default function Dashboard() {
   const { isLoaded, userId } = useAuth();
@@ -19,5 +19,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-
