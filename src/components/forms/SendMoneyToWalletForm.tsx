@@ -17,10 +17,12 @@ import {
   sendMoneyToWalletSchema,
 } from '@/lib/ZodShemas/sendMoneyToWalletSchema'
 import { useToast } from '../ui/use-toast'
-import { checkValidWallet } from '@/lib/actions/wallet.actions'
-import { BadgeCheck } from 'lucide-react'
+import { checkValidWallet, checkWalletPin } from '@/lib/actions/wallet.actions'
 import Spinner from '../shared/spinner'
 import { useUser } from '@clerk/nextjs'
+import Lottie from 'lottie-react'
+import VerfyTick from '@/LotteFiles/VerifyTick.json'
+import { WalletPin } from '../shared/WalletPin'
 
 interface SendMoneyToWalletFormProps {
   transactionLimit: number
@@ -31,6 +33,8 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
   const [isWalletVerified, setIsWalletVerified] = React.useState(false)
   const [walletVerificationLoading, setWalletVerificationLoading] = React.useState(false)
   const { user } = useUser()
+  const [openModal, setOpenModal] = React.useState(false)
+  const [sendMoneyLoading, setSendMoneyLoading] = React.useState(false)
 
   const form = useForm<SendMoneyToWalletFormValuesType>({
     resolver: zodResolver(sendMoneyToWalletSchema),
@@ -60,7 +64,7 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
       }
       if (!isWalletVerified) {
         setWalletVerificationLoading(true)
-        const walletVerfication = await checkValidWallet(data.recieverEmail)
+        const walletVerfication = await checkValidWallet(data.recieverEmail.toLowerCase())
         if (walletVerfication?.wallet) {
           setIsWalletVerified(true)
           setWalletVerificationLoading(false)
@@ -73,18 +77,48 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
           })
           form.setError('recieverEmail', { message: 'Wallet not found' })
         }
-      } else {
-        console.log('sending money')
       }
     } catch (error) {
       setWalletVerificationLoading(false)
     }
   }
 
-  return (
+  const sendMoney = async (walletPin: string) => {
+    try {
+      setSendMoneyLoading(true)
+      if (user) {
+        const isWalletPinCorrect = await checkWalletPin(user.id, walletPin)
+        if (isWalletPinCorrect?.wallet) {
+          toast({
+            title: 'Money Sent',
+            description: `Money has been sent to the wallet with email: ${form.getValues('recieverEmail')}`,
+            variant: 'default',
+          })
+          form.reset()
+        } else {
+          toast({
+            title: 'Wallet Pin',
+            description: `Invalid Wallet Pin`,
+            variant: 'destructive',
+          })
+        }
+        setOpenModal(false)
+        setIsWalletVerified(false)
+        setSendMoneyLoading(false)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return sendMoneyLoading ? (
+    <div className='flex justify-center items-center h-40'>
+      <Spinner size={6} />
+    </div>
+  ) : (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 relative'>
           <FormField
             control={form.control}
             name='amount'
@@ -103,36 +137,48 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
             name='recieverEmail'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='text-sm'>Reciever Email</FormLabel>
+                <FormLabel className='text-sm'>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='enter reciever email'
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e)
-                      setIsWalletVerified(false)
-                    }}
-                  />
+                  <div className='relative'>
+                    <Input
+                      placeholder='enter  email'
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e)
+                        setIsWalletVerified(false)
+                      }}
+                    />
+                    {isWalletVerified && (
+                      <div className='flex  items-center gap-1 absolute right-2 top-[50%] transform translate-y-[-50%]'>
+                        <Lottie animationData={VerfyTick} loop={false} style={{ width: '24px' }} />
+                      </div>
+                    )}
+                    {walletVerificationLoading && (
+                      <div className='flex  items-center gap-1 absolute right-2 top-[50%] transform translate-y-[-50%]'>
+                        <Spinner size={4} />
+                      </div>
+                    )}
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          {walletVerificationLoading && (
-            <div className='flex justify-center items-center'>
-              <Spinner size={4} />
-            </div>
-          )}
-          {isWalletVerified && (
-            <div className='flex justify-end items-end gap-2'>
-              <BadgeCheck size={24} className='text-green-700' />
-              <span className='text-green-700'> Wallet Verified</span>
-            </div>
-          )}
 
-          <Button type='submit' variant='secondary' className='w-full'>
-            {isWalletVerified ? 'Send Money' : 'Verify Wallet'}
-          </Button>
+          {isWalletVerified && (
+            <p className='text-green-500 text-sm float-right '> Wallet Verified</p>
+          )}
+          {!isWalletVerified ? (
+            <Button type='submit' variant='secondary' className='self-start'>
+              Veryfy Wallet
+            </Button>
+          ) : (
+            <WalletPin
+              setOpenModal={setOpenModal}
+              openModal={openModal}
+              handlerFunction={sendMoney}
+            />
+          )}
         </form>
       </Form>
       <div className='mt-5'>

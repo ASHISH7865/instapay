@@ -4,7 +4,7 @@ import { useAuth } from '@clerk/nextjs'
 
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import { checkWalletBalance } from '@/lib/actions/wallet.actions'
+import { checkWalletPin } from '@/lib/actions/wallet.actions'
 import Spinner from '../shared/spinner'
 import { cn } from '@/lib/utils'
 import { useWalletContext } from '@/provider/wallet-provider'
@@ -43,12 +43,12 @@ const SeperateInput = ({ numberOfInput, close }: { numberOfInput: number; close?
     } else {
       if (userId) {
         setLoading(true)
-        const res = await checkWalletBalance(userId, pin.join(''))
+        const res = await checkWalletPin(userId, pin.join(''))
         if (res?.status === 'error') {
           setError(res?.message)
           setLoading(false)
         } else {
-          setBalance(res?.balance || 0)
+          setBalance(res?.wallet?.balance || 0)
           setError('') // Clear any previous error
           setLoading(false)
           if (close) {

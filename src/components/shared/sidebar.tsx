@@ -63,8 +63,7 @@ const Sidebar = () => {
       </nav>
 
       <div className='absolute bottom-0 w-full p-2 flex flex-col gap-2'>
-        <div className='theme_customizer flex justify-between items-center p-2 border rounded-md border-primary'>
-          <p className='text-sm text-muted-foreground'>Customize Theme</p>
+        <div className='theme_customizer flex  items-center p-2 '>
           <ModeToggle />
           <ThemeCustomizer />
         </div>

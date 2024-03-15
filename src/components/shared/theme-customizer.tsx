@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label'
 // TODO: Change listboxes to use radio groups
 // TODO: Fix selected key issue (^ solved by above)
 
-export function ThemeCustomizer({ shrink = false }: { shrink?: boolean; hide?: boolean }) {
+export function ThemeCustomizer() {
   const { setTheme: setMode, resolvedTheme: mode } = useTheme()
 
   const {
@@ -34,11 +34,8 @@ export function ThemeCustomizer({ shrink = false }: { shrink?: boolean; hide?: b
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button
-          variant='default'
-          className={cn(shrink && 'h-9 w-9 p-0 sm:h-9 sm:w-auto sm:px-4 sm:py-2')}
-        >
-          <Settings2 className={cn('mr-2', shrink && 'mr-0 sm:mr-2')} />
+        <Button variant='ghost'>
+          <Settings2 />
         </Button>
       </SheetTrigger>
 

@@ -28,7 +28,7 @@ const PaymentActionModal = ({
       <DialogTrigger asChild>
         <Button variant={'secondary'}>{buttonText}</Button>
       </DialogTrigger>
-      <DialogContent className='h-[600px]'>
+      <DialogContent className='h-[600px] w-[400px] '>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

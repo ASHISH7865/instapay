@@ -102,7 +102,7 @@ export async function getUserWallet(userId: string) {
   }
 }
 
-export async function checkWalletBalance(userId: string, pin: string) {
+export async function checkWalletPin(userId: string, pin: string) {
   try {
     const wallet = await prisma.wallet.findUnique({
       where: {
@@ -128,8 +128,7 @@ export async function checkWalletBalance(userId: string, pin: string) {
     return {
       status: 'success',
       message: 'Wallet balance found',
-      balance: wallet.balance,
-      currency: wallet.currencyPreference,
+      wallet: wallet,
     }
   } catch (err: any) {
     console.log('Error in checking wallet balance', err)

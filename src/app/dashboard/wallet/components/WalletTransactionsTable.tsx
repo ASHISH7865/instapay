@@ -90,7 +90,7 @@ const TransactionsTable = ({
   const numberOfPages = Math.ceil(transactions?.length / itemsPerPage!)
 
   return (
-    <div className='mt-5'>
+    <div className='mt-5 '>
       <p className='text-2xl font-bold'>{transactionHeading}</p>
       <div className='mt-5 border-2 rounded-md overflow-hidden'>
         <Table className='w-full'>
@@ -132,7 +132,7 @@ const TransactionsTable = ({
         </Table>
       </div>
       {numberOfPages > 1 && (
-        <div className='flex justify-center mt-4'>
+        <div className='flex justify-center mt-4 mb-10'>
           <Pagination>
             <PaginationContent className='cursor-pointer'>
               <PaginationItem>
