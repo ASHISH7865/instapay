@@ -623,7 +623,7 @@ export const themes = [
   //     },
   //   },
   // },
-] as const;
+] as const
 
 export const grayColors = [
   {
@@ -868,10 +868,10 @@ export const grayColors = [
   //     },
   //   },
   // },
-] as const;
+] as const
 
-export type Theme = (typeof themes)[number];
-export type ThemeColor = (typeof themes)[number]['name'];
-export type Gray = (typeof grayColors)[number];
+export type Theme = (typeof themes)[number]
+export type ThemeColor = (typeof themes)[number]['name']
+export type Gray = (typeof grayColors)[number]
 
-export type GrayColor = (typeof grayColors)[number]['name'];
+export type GrayColor = (typeof grayColors)[number]['name']

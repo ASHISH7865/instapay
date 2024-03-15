@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   Table,
   TableBody,
@@ -6,9 +6,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
 const Transactions = [
   {
@@ -75,29 +75,27 @@ const Transactions = [
     amount: 100,
     status: 'success',
   },
-];
+]
 
 const PaymentTransactionTable = () => {
   return (
-    <div className="mt-5">
-      <Table className="w-full">
+    <div className='mt-5'>
+      <Table className='w-full'>
         <TableHeader>
           <TableRow>
-            <TableHead className="">Transaction ID</TableHead>
+            <TableHead className=''>Transaction ID</TableHead>
             <TableHead>Transaction Type</TableHead>
             <TableHead>From</TableHead>
             <TableHead>To</TableHead>
             <TableHead>Amount</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="text-right">Action</TableHead>
+            <TableHead className='text-right'>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Transactions.map(item => (
+          {Transactions.map((item) => (
             <TableRow key={item.transactionId}>
-              <TableCell className="font-medium">
-                {item.transactionId}
-              </TableCell>
+              <TableCell className='font-medium'>{item.transactionId}</TableCell>
               <TableCell>{item.transactionType}</TableCell>
               <TableCell>{item.from}</TableCell>
               <TableCell>{item.to}</TableCell>
@@ -105,8 +103,8 @@ const PaymentTransactionTable = () => {
               <TableCell>
                 <Badge>{item.status}</Badge>
               </TableCell>
-              <TableCell className="flex justify-end gap-2">
-                <Button type="button" variant="secondary">
+              <TableCell className='flex justify-end gap-2'>
+                <Button type='button' variant='secondary'>
                   View
                 </Button>
               </TableCell>
@@ -115,7 +113,7 @@ const PaymentTransactionTable = () => {
         </TableBody>
       </Table>
     </div>
-  );
-};
+  )
+}
 
-export default PaymentTransactionTable;
+export default PaymentTransactionTable

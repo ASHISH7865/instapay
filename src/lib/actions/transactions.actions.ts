@@ -1,13 +1,13 @@
-'use server';
-import { redirect } from 'next/navigation';
-import Stripe from 'stripe';
-import prisma from '../prisma';
-import { CreateTransactionParams, Data } from '@/types/transaction.types';
+'use server'
+import { redirect } from 'next/navigation'
+import Stripe from 'stripe'
+import prisma from '../prisma'
+import { CreateTransactionParams, Data } from '@/types/transaction.types'
 
 export async function checkoutWalletMoney(data: Data) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
-  const amount = Number(data.amountToBeAdded) * 100;
+  const amount = Number(data.amountToBeAdded) * 100
 
   const session = await stripe.checkout.sessions.create({
     line_items: [
@@ -32,8 +32,8 @@ export async function checkoutWalletMoney(data: Data) {
     mode: 'payment',
     success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/wallet?success=true`,
     cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/wallet?cancel=true`,
-  });
-  redirect(session.url!);
+  })
+  redirect(session.url!)
 }
 
 export async function createTransactions(transaction: CreateTransactionParams) {
@@ -48,13 +48,13 @@ export async function createTransactions(transaction: CreateTransactionParams) {
     where: {
       userId: transaction.userId,
     },
-  });
+  })
 
   if (!user) {
     return {
       status: 'error',
       message: 'User not found',
-    };
+    }
   }
 
   // step-2
@@ -62,13 +62,13 @@ export async function createTransactions(transaction: CreateTransactionParams) {
     where: {
       userId: transaction.userId,
     },
-  });
+  })
 
   if (!wallet) {
     return {
       status: 'error',
       message: 'Wallet not found',
-    };
+    }
   }
 
   // step-3
@@ -91,7 +91,7 @@ export async function createTransactions(transaction: CreateTransactionParams) {
         },
       },
     },
-  });
+  })
 
   // step-4
   if (newTransaction) {
@@ -104,12 +104,12 @@ export async function createTransactions(transaction: CreateTransactionParams) {
           increment: transaction.amount,
         },
       },
-    });
+    })
     return {
       status: 'success',
       message: 'Transaction created successfully',
       data: updatedWallet,
-    };
+    }
   }
 }
 
@@ -128,10 +128,10 @@ export async function getWalletDepositTransactions(userId: string) {
         },
       },
     },
-  });
+  })
   return {
     transactions: transactions?.transactions,
-  };
+  }
 }
 
 export async function getAllTransactionsByUserId(userId: string) {
@@ -146,8 +146,8 @@ export async function getAllTransactionsByUserId(userId: string) {
         },
       },
     },
-  });
+  })
   return {
     transactions: transactions?.transactions,
-  };
+  }
 }

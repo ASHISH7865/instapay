@@ -1,22 +1,23 @@
-'use server';
-import prisma from '@/lib/prisma';
-import { CreateWalletType } from '../ZodShemas/createWalletSchema';
-import bcrypt from 'bcrypt';
-import { revalidatePath } from 'next/cache';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use server'
+import prisma from '@/lib/prisma'
+import { CreateWalletType } from '../ZodShemas/createWalletSchema'
+import bcrypt from 'bcrypt'
+import { revalidatePath } from 'next/cache'
 
-const SALT = 10;
+const SALT = 10
 
 export interface Wallet {
-  id: string;
-  balance: number;
-  walletPasswordType: string;
-  walletPin: string;
-  currencyPreference: string;
-  usagePreference: string;
-  createdAt: Date;
-  updatedAt: Date;
-  transactionLimit: number;
-  userId: string;
+  id: string
+  balance: number
+  walletPasswordType: string
+  walletPin: string
+  currencyPreference: string
+  usagePreference: string
+  createdAt: Date
+  updatedAt: Date
+  transactionLimit: number
+  userId: string
 }
 
 export async function createUserWallet(userId: string, data: CreateWalletType) {
@@ -29,28 +30,28 @@ export async function createUserWallet(userId: string, data: CreateWalletType) {
       where: {
         userId: userId,
       },
-    });
+    })
     if (!userInfo) {
       return {
         status: 'error',
         message: 'User not found',
-      };
+      }
     }
 
     const walletExist = await prisma.wallet.findUnique({
       where: {
         userId: userId,
       },
-    });
+    })
 
     if (walletExist) {
       return {
         status: 'error',
         message: 'Wallet already exist',
         wallet: walletExist,
-      };
+      }
     } else {
-      const hashedPin = await bcrypt.hash(data.walletPin, SALT);
+      const hashedPin = await bcrypt.hash(data.walletPin, SALT)
 
       const newWallet = await prisma.userInfo.update({
         where: {
@@ -69,17 +70,17 @@ export async function createUserWallet(userId: string, data: CreateWalletType) {
             },
           },
         },
-      });
+      })
 
-      revalidatePath('/dashboard/wallet');
+      revalidatePath('/dashboard/wallet')
       return {
         status: 'success',
         message: 'Wallet created successfully',
         wallet: newWallet,
-      };
+      }
     }
   } catch (err: any) {
-    console.log('Error in creating wallet', err);
+    console.log('Error in creating wallet', err)
   }
 }
 
@@ -89,14 +90,16 @@ export async function getUserWallet(userId: string) {
       where: {
         userId: userId,
       },
-    });
+    })
 
     return {
       status: 'success',
       message: 'Wallet found',
       wallet: wallet,
-    };
-  } catch (err: any) {}
+    }
+  } catch (err: any) {
+    console.log('Error in getting wallet', err)
+  }
 }
 
 export async function checkWalletBalance(userId: string, pin: string) {
@@ -105,21 +108,21 @@ export async function checkWalletBalance(userId: string, pin: string) {
       where: {
         userId: userId,
       },
-    });
+    })
 
     if (!wallet) {
       return {
         status: 'error',
         message: 'Wallet not found',
-      };
+      }
     }
 
-    const match = await bcrypt.compare(pin, wallet.walletPin);
+    const match = await bcrypt.compare(pin, wallet.walletPin)
     if (!match) {
       return {
         status: 'error',
         message: 'Invalid wallet pin',
-      };
+      }
     }
 
     return {
@@ -127,8 +130,38 @@ export async function checkWalletBalance(userId: string, pin: string) {
       message: 'Wallet balance found',
       balance: wallet.balance,
       currency: wallet.currencyPreference,
-    };
+    }
   } catch (err: any) {
-    console.log('Error in checking wallet balance', err);
+    console.log('Error in checking wallet balance', err)
+  }
+}
+
+export const checkValidWallet = async (userEmail: string) => {
+  // wallet id could be anything, it could be a username, email, or a wallet id
+
+  // check if the wallet id exists in the database
+  // if it exists, return the wallet
+  // if it does not exist, return an error
+  try {
+    const userHaveWallet = await prisma.userInfo.findUnique({
+      where: {
+        primaryEmailAddresses: userEmail,
+      },
+    })
+
+    if (!userHaveWallet) {
+      return {
+        status: 'error',
+        message: 'User not found',
+      }
+    }
+
+    return {
+      status: 'success',
+      message: 'Wallet found',
+      wallet: userHaveWallet,
+    }
+  } catch (err: any) {
+    console.log('Error in checking wallet', err)
   }
 }

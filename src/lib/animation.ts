@@ -6,4 +6,4 @@ export const loadingTextVariants = {
       duration: 1.5,
     },
   },
-};
+}

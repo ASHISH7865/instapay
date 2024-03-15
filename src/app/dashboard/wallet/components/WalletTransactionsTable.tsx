@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react'
 import {
   Table,
   TableBody,
@@ -6,23 +6,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { getWalletDepositTransactions } from '@/lib/actions/transactions.actions';
-import { useAuth } from '@clerk/nextjs';
-import { Transaction } from '@prisma/client';
-import Spinner from '@/components/shared/spinner';
+} from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { Transaction } from '@prisma/client'
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
-import { Skeleton } from '@/components/ui/skeleton';
+} from '@/components/ui/pagination'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const Table_Header = [
   'ID',
@@ -33,33 +28,33 @@ const Table_Header = [
   'Date of Transaction',
   'Balance Before',
   'Balance After',
-];
+]
 
 const renderSkeletonRow = () => (
   <TableRow>
     <TableCell>
-      <Skeleton className="w-10 h-5" />
+      <Skeleton className='w-10 h-5' />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-10 h-5" />
+      <Skeleton className='w-10 h-5' />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-10 h-5" />
+      <Skeleton className='w-10 h-5' />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-10 h-5" />
+      <Skeleton className='w-10 h-5' />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-10 h-5" />
+      <Skeleton className='w-10 h-5' />
     </TableCell>
   </TableRow>
-);
+)
 
 interface TransactionsTableProps {
-  transactions: Transaction[];
-  loading: boolean;
-  transactionHeading?: string;
-  itemsPerPage?: number;
+  transactions: Transaction[]
+  loading: boolean
+  transactionHeading?: string
+  itemsPerPage?: number
 }
 
 const TransactionsTable = ({
@@ -68,49 +63,45 @@ const TransactionsTable = ({
   transactionHeading,
   itemsPerPage = 5,
 }: TransactionsTableProps) => {
-  const { userId } = useAuth();
-  const [currentPage, setCurrentPage] = useState(1); // initial page
+  const [currentPage, setCurrentPage] = useState(1) // initial page
 
   if (loading) {
-    return renderSkeletonRow();
+    return renderSkeletonRow()
   }
 
   if (!transactions) {
     return (
-      <div className="flex flex-col items-center justify-center mt-5">
+      <div className='flex flex-col items-center justify-center mt-5'>
         <p>No transactions found</p>
       </div>
-    );
+    )
   }
 
   const handlePageChange = (page: number) => {
-    if (page < 1 || page > Math.ceil(transactions?.length! / itemsPerPage!)) {
-      return;
+    if (page < 1 || page > Math.ceil(transactions?.length / itemsPerPage!)) {
+      return
     }
-    setCurrentPage(page);
-  };
+    setCurrentPage(page)
+  }
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(
-    startIndex + itemsPerPage,
-    transactions?.length || 0,
-  );
-  const paginatedTransactions = transactions?.slice(startIndex, endIndex);
-  const numberOfPages = Math.ceil(transactions?.length! / itemsPerPage!);
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = Math.min(startIndex + itemsPerPage, transactions?.length || 0)
+  const paginatedTransactions = transactions?.slice(startIndex, endIndex)
+  const numberOfPages = Math.ceil(transactions?.length / itemsPerPage!)
 
   return (
-    <div className="mt-5">
-      <p className="text-2xl font-bold">{transactionHeading}</p>
-      <div className="mt-5 border-2 rounded-md overflow-hidden">
-        <Table className="w-full">
-          <TableHeader className="bg-secondary">
+    <div className='mt-5'>
+      <p className='text-2xl font-bold'>{transactionHeading}</p>
+      <div className='mt-5 border-2 rounded-md overflow-hidden'>
+        <Table className='w-full'>
+          <TableHeader className='bg-secondary'>
             <TableRow>
-              {Table_Header.map(item => (
+              {Table_Header.map((item) => (
                 <TableHead key={item}>{item}</TableHead>
               ))}
             </TableRow>
           </TableHeader>
-          <TableBody className="dark:bg-black bg-white">
+          <TableBody className='dark:bg-black bg-white'>
             {paginatedTransactions?.map((transaction, index) => (
               <TableRow key={index}>
                 <TableCell>{transaction.id}</TableCell>
@@ -132,9 +123,7 @@ const TransactionsTable = ({
                   </Badge>
                 </TableCell>
                 <TableCell>{transaction.purpose}</TableCell>
-                <TableCell>
-                  {new Date(transaction.createdAt).toLocaleString()}
-                </TableCell>
+                <TableCell>{new Date(transaction.createdAt).toLocaleString()}</TableCell>
                 <TableCell>{transaction.balanceBefore}</TableCell>
                 <TableCell>{transaction.balanceAfter}</TableCell>
               </TableRow>
@@ -143,13 +132,11 @@ const TransactionsTable = ({
         </Table>
       </div>
       {numberOfPages > 1 && (
-        <div className="flex justify-center mt-4">
+        <div className='flex justify-center mt-4'>
           <Pagination>
-            <PaginationContent className="cursor-pointer">
+            <PaginationContent className='cursor-pointer'>
               <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
+                <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)}>
                   Previous
                 </PaginationPrevious>
               </PaginationItem>
@@ -164,9 +151,7 @@ const TransactionsTable = ({
                 </PaginationItem>
               ))}
               <PaginationItem>
-                <PaginationNext
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
+                <PaginationNext onClick={() => handlePageChange(currentPage + 1)}>
                   Next
                 </PaginationNext>
               </PaginationItem>
@@ -175,7 +160,7 @@ const TransactionsTable = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default TransactionsTable;
+export default TransactionsTable

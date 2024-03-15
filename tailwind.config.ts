@@ -1,5 +1,5 @@
-import type { Config } from 'tailwindcss';
-import svgToDataUri from 'mini-svg-data-uri';
+import type { Config } from 'tailwindcss'
+import svgToDataUri from 'mini-svg-data-uri'
 
 const config = {
   darkMode: ['class'],
@@ -97,9 +97,9 @@ const config = {
           }),
         },
         { values: theme('colors'), type: 'color' },
-      );
+      )
     },
   ],
-} satisfies Config;
+} satisfies Config
 
-export default config;
+export default config

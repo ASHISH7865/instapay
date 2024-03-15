@@ -1,43 +1,42 @@
+import React from 'react'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Button } from '../ui/button';
+} from '@/components/ui/dialog'
+import { Button } from '../ui/button'
+import SendMoneyToWalletForm from '../forms/SendMoneyToWalletForm'
 
 interface PaymentCardProps {
-  title: string;
-  description: string;
-  buttonText: string;
-  transactionLimit: string;
+  title: string
+  description: string
+  buttonText: string
+  transactionLimit: number
 }
 
 const PaymentActionModal = ({
   title,
   description,
   buttonText,
+  transactionLimit,
 }: PaymentCardProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant={'secondary'}>{buttonText}</Button>
       </DialogTrigger>
-      <DialogContent className="h-[400px]">
+      <DialogContent className='h-[600px]'>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <DialogFooter className="sm:justify-start">
-          <DialogClose asChild></DialogClose>
-        </DialogFooter>
+        <SendMoneyToWalletForm transactionLimit={transactionLimit} />
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default PaymentActionModal;
+export default PaymentActionModal

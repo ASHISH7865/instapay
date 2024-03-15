@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbProps,
@@ -8,23 +8,20 @@ import {
   BreadcrumbsProps,
   Link,
   LinkProps,
-} from 'react-aria-components';
+} from 'react-aria-components'
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
-import { buttonVariants } from './button';
+import { buttonVariants } from './button'
 
-const _Breadcrumbs = <T extends object>({
-  className,
-  ...props
-}: BreadcrumbsProps<T>) => (
+const _Breadcrumbs = <T extends object>({ className, ...props }: BreadcrumbsProps<T>) => (
   <Breadcrumbs className={cn('flex flex-wrap', className)} {...props} />
-);
+)
 interface BreadcrumbItemProps extends Omit<BreadcrumbProps, 'children'> {
-  linkClassName?: LinkProps['className'];
-  href?: LinkProps['href'];
-  linkProps?: Omit<LinkProps, 'className' | 'href' | 'children'>;
-  children?: LinkProps['children'];
+  linkClassName?: LinkProps['className']
+  href?: LinkProps['href']
+  linkProps?: Omit<LinkProps, 'className' | 'href' | 'children'>
+  children?: LinkProps['children']
 }
 
 const BreadcrumbItem = ({
@@ -37,7 +34,7 @@ const BreadcrumbItem = ({
 }: BreadcrumbItemProps) => (
   <Breadcrumb className={cn('flex items-center', className)} {...props}>
     <Link
-      className={values =>
+      className={(values) =>
         cn(
           buttonVariants({
             variant: 'link',
@@ -46,9 +43,7 @@ const BreadcrumbItem = ({
           'peer p-1 opacity-50',
           'data-[disabled]:opacity-100',
           'text-foreground',
-          typeof linkClassName === 'function'
-            ? linkClassName(values)
-            : linkClassName,
+          typeof linkClassName === 'function' ? linkClassName(values) : linkClassName,
         )
       }
       href={href}
@@ -56,11 +51,8 @@ const BreadcrumbItem = ({
     >
       {children}
     </Link>
-    <ChevronRight
-      aria-hidden="true"
-      className="h-4 w-4 peer-data-[current]:hidden"
-    />
+    <ChevronRight aria-hidden='true' className='h-4 w-4 peer-data-[current]:hidden' />
   </Breadcrumb>
-);
+)
 
-export { _Breadcrumbs as Breadcrumbs, BreadcrumbItem };
+export { _Breadcrumbs as Breadcrumbs, BreadcrumbItem }

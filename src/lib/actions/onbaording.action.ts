@@ -1,22 +1,17 @@
-'use server';
-import prisma from '@/lib/prisma';
-import { OnboardingFormValuesType } from '../ZodShemas/onboardingSchema';
-import bcrypt from 'bcrypt';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use server'
+import prisma from '@/lib/prisma'
+import { OnboardingFormValuesType } from '../ZodShemas/onboardingSchema'
 
-const SALT = 10;
-
-export async function onboardUser(
-  userId: string,
-  data: OnboardingFormValuesType,
-) {
+export async function onboardUser(userId: string, data: OnboardingFormValuesType) {
   try {
     const user = await prisma.userInfo.findUnique({
       where: {
         id: userId,
       },
-    });
+    })
     if (user) {
-      throw new Error('User already onboarded');
+      throw new Error('User already onboarded')
     }
 
     await prisma.userInfo.create({
@@ -33,12 +28,12 @@ export async function onboardUser(
         username: data.username,
         phoneNumber: data.phoneNumbers,
       },
-    });
+    })
     return {
       message: 'User onboarded successfully',
-    };
+    }
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err)
   }
 }
 
@@ -48,12 +43,12 @@ export async function getUserInfo(userId: string) {
       where: {
         userId: userId,
       },
-    });
+    })
     if (!user) {
-      return false;
+      return false
     }
-    return true;
+    return true
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err)
   }
 }

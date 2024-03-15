@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import prisma from '@/lib/prisma'
 
 const beneFiciaryDataForAshish = [
   {
@@ -7,16 +7,16 @@ const beneFiciaryDataForAshish = [
     email: 'random@email.com',
     userId: 'user_2c6BIseJtmZ3hiLxoCHIjLLpkSB',
   },
-];
+]
 
 const load = async () => {
   try {
   } catch (e) {
-    console.error(e);
-    process.exit(1);
+    console.error(e)
+    process.exit(1)
   } finally {
-    await prisma.$disconnect();
+    await prisma.$disconnect()
   }
-};
+}
 
-load();
+load()

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const onboardingSchema = z.object({
   firstName: z
@@ -12,27 +12,17 @@ export const onboardingSchema = z.object({
     .min(2, { message: 'Username must be at least 2 characters long' }),
   gender: z.enum(['male', 'female', 'other']),
 
-  phoneNumbers: z
-    .string()
-    .min(10, { message: 'Phone number must be at least 10 characters long' }),
+  phoneNumbers: z.string().min(10, { message: 'Phone number must be at least 10 characters long' }),
   primaryEmailAddresses: z.string().email({ message: 'Invalid email address' }),
   addresses: z.object({
     streetAddress: z.string().optional(),
-    city: z
-      .string()
-      .min(2, { message: 'City must be at least 2 characters long' }),
-    stateOrProvince: z
-      .string()
-      .min(2, {
-        message: 'State or Province must be at least 2 characters long',
-      }),
-    postalCode: z
-      .string()
-      .min(5, { message: 'Postal code must be at least 5 characters long' }),
-    country: z
-      .string()
-      .min(2, { message: 'Country must be at least 2 characters long' }),
+    city: z.string().min(2, { message: 'City must be at least 2 characters long' }),
+    stateOrProvince: z.string().min(2, {
+      message: 'State or Province must be at least 2 characters long',
+    }),
+    postalCode: z.string().min(5, { message: 'Postal code must be at least 5 characters long' }),
+    country: z.string().min(2, { message: 'Country must be at least 2 characters long' }),
   }),
-});
+})
 
-export type OnboardingFormValuesType = z.infer<typeof onboardingSchema>;
+export type OnboardingFormValuesType = z.infer<typeof onboardingSchema>

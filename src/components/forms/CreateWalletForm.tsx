@@ -1,9 +1,9 @@
-'use client';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@clerk/nextjs';
-import { useToast } from '../ui/use-toast';
+'use client'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useAuth } from '@clerk/nextjs'
+import { useToast } from '../ui/use-toast'
 import {
   Form,
   FormField,
@@ -11,32 +11,23 @@ import {
   FormControl,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
-import Spinner from '../shared/spinner';
-import { TermAndCondition } from '../modal/term-condition';
-import {
-  CreateWalletType,
-  createWalletSchema,
-} from '@/lib/ZodShemas/createWalletSchema';
-import { createUserWallet } from '@/lib/actions/wallet.actions';
+} from '@/components/ui/form'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import Spinner from '../shared/spinner'
+import { TermAndCondition } from '../modal/term-condition'
+import { CreateWalletType, createWalletSchema } from '@/lib/ZodShemas/createWalletSchema'
+import { createUserWallet } from '@/lib/actions/wallet.actions'
 
 interface CreateWalletFormProps {
-  close: () => void;
+  close: () => void
 }
 
 const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
-  const [walletLoading, setWalletLoading] = React.useState(false);
-  const { userId } = useAuth();
-  const { toast } = useToast();
+  const [walletLoading, setWalletLoading] = React.useState(false)
+  const { userId } = useAuth()
+  const { toast } = useToast()
 
   const form = useForm<CreateWalletType>({
     resolver: zodResolver(createWalletSchema),
@@ -47,49 +38,49 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
       walletType: 'personal',
       walletCurrency: 'INR',
     },
-  });
+  })
 
   const onSubmit = async (data: CreateWalletType) => {
     if (userId) {
-      setWalletLoading(true);
-      const response = await createUserWallet(userId, data);
-      setWalletLoading(false);
+      setWalletLoading(true)
+      const response = await createUserWallet(userId, data)
+      setWalletLoading(false)
       if (response?.status === 'success') {
         toast({
           title: 'Create Wallet Success',
           variant: 'default',
-        });
-        close();
+        })
+        close()
       } else {
         toast({
           title: 'Create Wallet Failed',
           description: response?.message,
           variant: 'destructive',
-        });
+        })
       }
     } else {
       toast({
         title: 'User Not Fount or you are not logged in',
         description: 'Please login to continue',
         variant: 'destructive',
-      });
+      })
     }
-  };
+  }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-1  gap-4 w-full  my-10"
+        className='grid grid-cols-1  gap-4 w-full  my-10'
       >
         <FormField
           control={form.control}
-          name="walletName"
+          name='walletName'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Wallet Name</FormLabel>
               <FormControl>
-                <Input placeholder="enter wallet name" {...field} />
+                <Input placeholder='enter wallet name' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -97,12 +88,12 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
         />
         <FormField
           control={form.control}
-          name="governmentId"
+          name='governmentId'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Valid government issued id</FormLabel>
               <FormControl>
-                <Input placeholder="enter id" {...field} />
+                <Input placeholder='enter id' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -110,7 +101,7 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
         />
         <FormField
           control={form.control}
-          name="walletType"
+          name='walletType'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Choose your wallet type</FormLabel>
@@ -120,10 +111,10 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
                     <SelectValue>{field.value}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="personal">personal</SelectItem>
-                    <SelectItem value="business">business</SelectItem>
-                    <SelectItem value="testing">testing</SelectItem>
-                    <SelectItem value="other">other</SelectItem>
+                    <SelectItem value='personal'>personal</SelectItem>
+                    <SelectItem value='business'>business</SelectItem>
+                    <SelectItem value='testing'>testing</SelectItem>
+                    <SelectItem value='other'>other</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -133,7 +124,7 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
         />
         <FormField
           control={form.control}
-          name="walletCurrency"
+          name='walletCurrency'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Choose your wallet type</FormLabel>
@@ -143,10 +134,10 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
                     <SelectValue>{field.value}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="INR">INR</SelectItem>
-                    <SelectItem value="other">other</SelectItem>
+                    <SelectItem value='USD'>USD</SelectItem>
+                    <SelectItem value='EUR'>EUR</SelectItem>
+                    <SelectItem value='INR'>INR</SelectItem>
+                    <SelectItem value='other'>other</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -156,17 +147,17 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
         />
         <FormField
           control={form.control}
-          name="walletPin"
+          name='walletPin'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Wallet Pin</FormLabel>
               <FormControl>
                 <Input
-                  autoComplete="new-password"
+                  autoComplete='new-password'
                   maxLength={6}
                   minLength={6}
-                  type="password"
-                  placeholder="enter wallet pin"
+                  type='password'
+                  placeholder='enter wallet pin'
                   {...field}
                 />
               </FormControl>
@@ -175,23 +166,15 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
           )}
         />
 
-        <Button
-          variant={'secondary'}
-          type="submit"
-          className="w-[200px] m-auto "
-        >
-          {walletLoading ? (
-            <Spinner className="w-6 h-6 text-primary" />
-          ) : (
-            'Submit'
-          )}
+        <Button variant={'secondary'} type='submit' className='w-[200px] m-auto '>
+          {walletLoading ? <Spinner className='w-6 h-6 text-primary' /> : 'Submit'}
         </Button>
-        <p className="text-center text-sm text-gray-500">
+        <p className='text-center text-sm text-gray-500'>
           By clicking the submit button, you agree to our <TermAndCondition />
         </p>
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default CreateWalletForm;
+export default CreateWalletForm
