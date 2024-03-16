@@ -23,6 +23,8 @@ import { useUser } from '@clerk/nextjs'
 import Lottie from 'lottie-react'
 import VerfyTick from '@/LotteFiles/VerifyTick.json'
 import { WalletPin } from '../shared/WalletPin'
+import { moneyTransfer } from '@/lib/actions/transactions.actions'
+import { checkUserExistsByEmail } from '@/lib/actions/user.actions'
 
 interface SendMoneyToWalletFormProps {
   transactionLimit: number
@@ -89,11 +91,29 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
       if (user) {
         const isWalletPinCorrect = await checkWalletPin(user.id, walletPin)
         if (isWalletPinCorrect?.wallet) {
-          toast({
-            title: 'Money Sent',
-            description: `Money has been sent to the wallet with email: ${form.getValues('recieverEmail')}`,
-            variant: 'default',
-          })
+          const recieiver = await checkUserExistsByEmail(form.getValues('recieverEmail'))
+
+          const transaction = await moneyTransfer(
+            user.id,
+            recieiver.user?.userId as string,
+            parseFloat(form.getValues('amount').toString()),
+          )
+          if (transaction?.status === 'success') {
+            toast({
+              title: 'Transaction Successful',
+              description: `Transaction done successfully with amount ₹ ${form.getValues('amount')}`,
+              variant: 'default',
+            })
+            form.reset()
+            console.log('transaction done')
+            console.log(transaction)
+          } else {
+            toast({
+              title: 'Transaction Failed',
+              description: transaction?.message,
+              variant: 'destructive',
+            })
+          }
           form.reset()
         } else {
           toast({
@@ -108,6 +128,7 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
       }
     } catch (error) {
       console.log(error)
+      setSendMoneyLoading(false)
     }
   }
 

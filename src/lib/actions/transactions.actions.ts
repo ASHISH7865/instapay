@@ -37,13 +37,6 @@ export async function checkoutWalletMoney(data: Data) {
 }
 
 export async function createTransactions(transaction: CreateTransactionParams) {
-  // check if the user exists
-  // check if the user has a wallet
-  // create a transaction
-  // create a transaction history
-  // update the wallet balance
-
-  // step-1
   const user = await prisma.userInfo.findUnique({
     where: {
       userId: transaction.userId,
@@ -84,8 +77,8 @@ export async function createTransactions(transaction: CreateTransactionParams) {
           senderId: transaction.senderId,
           recipientId: transaction.receiverId,
           amount: transaction.amount,
-          balanceBefore: wallet.balance,
-          balanceAfter: wallet.balance + transaction.amount,
+          balanceBefore: transaction.balanceBefore,
+          balanceAfter: transaction.balanceAfter,
           status: transaction.status,
           trnxSummary: transaction.trnxSummary,
         },
@@ -94,22 +87,74 @@ export async function createTransactions(transaction: CreateTransactionParams) {
   })
 
   // step-4
-  if (newTransaction) {
-    const updatedWallet = await prisma.wallet.update({
-      where: {
-        userId: transaction.userId,
-      },
-      data: {
-        balance: {
-          increment: transaction.amount,
-        },
-      },
-    })
+  return {
+    status: 'success',
+    message: 'Transaction created successfully',
+    data: newTransaction,
+  }
+}
+
+export async function reduceWalletBalance(userId: string, amount: number) {
+  const wallet = await prisma.wallet.findUnique({
+    where: {
+      userId,
+    },
+  })
+
+  if (!wallet) {
     return {
-      status: 'success',
-      message: 'Transaction created successfully',
-      data: updatedWallet,
+      status: 'error',
+      message: 'Wallet not found',
     }
+  }
+
+  const updatedWallet = await prisma.wallet.update({
+    where: {
+      userId,
+    },
+    data: {
+      balance: {
+        decrement: amount,
+      },
+    },
+  })
+
+  return {
+    status: 'success',
+    message: 'Wallet balance updated successfully',
+    data: updatedWallet,
+  }
+}
+
+export async function increaseWalletBalance(userId: string, amount: number) {
+  const wallet = await prisma.wallet.findUnique({
+    where: {
+      userId,
+    },
+  })
+
+  if (!wallet) {
+    return {
+      status: 'error',
+      message: 'Wallet not found',
+    }
+  }
+
+  const updatedWallet = await prisma.wallet.update({
+    where: {
+      userId,
+    },
+    data: {
+      balance: {
+        increment: amount,
+      },
+    },
+  })
+
+  return {
+    status: 'success',
+    message: 'Wallet balance updated successfully',
+    data: updatedWallet,
   }
 }
 
@@ -149,5 +194,158 @@ export async function getAllTransactionsByUserId(userId: string) {
   })
   return {
     transactions: transactions?.transactions,
+  }
+}
+
+export async function depositMoneyToWallet(from: string, to: string, amount: number) {
+  console.log(from, to, amount)
+  //here from is the stripe session id and to is the user id
+
+  const wallet = await prisma.wallet.findUnique({
+    where: {
+      userId: to,
+    },
+  })
+
+  if (!wallet) {
+    return {
+      status: 'error',
+      message: 'Wallet not found',
+    }
+  }
+
+  const updatedWallet = await prisma.wallet.update({
+    where: {
+      userId: to,
+    },
+    data: {
+      balance: {
+        increment: amount,
+      },
+    },
+  })
+
+  await createTransactions({
+    transactionName: 'Wallet_Top_Up',
+    userId: to,
+    trnxType: 'CREDIT',
+    purpose: 'DEPOSIT',
+    senderId: `Stripe-${from}`,
+    receiverId: to,
+    amount: amount,
+    status: 'COMPLETED',
+    balanceBefore: wallet.balance,
+    balanceAfter: updatedWallet.balance,
+    trnxSummary: 'Wallet top up successful',
+  })
+
+  return {
+    status: 'success',
+    message: 'Wallet deposit successful',
+  }
+}
+
+export async function moneyTransfer(from: string, to: string, amount: number) {
+  const sender = await prisma.wallet.findUnique({
+    where: {
+      userId: from,
+    },
+  })
+
+  const receiver = await prisma.wallet.findUnique({
+    where: {
+      userId: to,
+    },
+  })
+
+  if (!sender) {
+    return {
+      status: 'error',
+      message: 'Sender not found',
+    }
+  }
+
+  if (!receiver) {
+    return {
+      status: 'error',
+      message: 'Receiver not found',
+    }
+  }
+
+  if (sender.balance < amount) {
+    await createTransactions({
+      transactionName: 'Wallet_Transfer',
+      userId: from,
+      trnxType: 'DEBIT',
+      purpose: 'TRANSFER',
+      senderId: from,
+      receiverId: to,
+      amount: amount,
+      status: 'FAILED',
+      balanceBefore: sender.balance,
+      balanceAfter: sender.balance,
+      trnxSummary: 'Money transfer to ' + to + ' failed due to insufficient balance',
+    })
+
+    return {
+      status: 'error',
+      message: 'Insufficient balance for transfer',
+    }
+  }
+
+  console.log('sender', sender)
+  // const updatedSender = await prisma.wallet.update({
+  //   where: {
+  //     userId: from,
+  //   },
+  //   data: {
+  //     balance: {
+  //       decrement: amount,
+  //     },
+  //   },
+  // })
+
+  // const updatedReceiver = await prisma.wallet.update({
+  //   where: {
+  //     userId: to,
+  //   },
+  //   data: {
+  //     balance: {
+  //       increment: amount,
+  //     },
+  //   },
+  // })
+
+  // await createTransactions({
+  //   transactionName: 'Wallet_Transfer',
+  //   userId: from,
+  //   trnxType: 'DEBIT',
+  //   purpose: 'TRANSFER',
+  //   senderId: from,
+  //   receiverId: to,
+  //   amount: amount,
+  //   status: 'COMPLETED',
+  //   balanceBefore: sender.balance,
+  //   balanceAfter: updatedSender.balance,
+  //   trnxSummary: 'Money transfer to ' + to + ' successful',
+  // })
+
+  // await createTransactions({
+  //   transactionName: 'Wallet_Transfer',
+  //   userId: to,
+  //   trnxType: 'CREDIT',
+  //   purpose: 'TRANSFER',
+  //   senderId: from,
+  //   receiverId: to,
+  //   amount: amount,
+  //   status: 'COMPLETED',
+  //   balanceBefore: receiver.balance,
+  //   balanceAfter: updatedReceiver.balance,
+  //   trnxSummary: 'Money received from ' + from + ' successful',
+  // })
+
+  return {
+    status: 'success',
+    message: 'Money transferred successfully',
   }
 }

@@ -72,6 +72,30 @@ export async function checkUserExists(userId: string) {
   }
 }
 
+export async function checkUserExistsByEmail(email: string) {
+  try {
+    const user = await prisma.userInfo.findUnique({
+      where: {
+        primaryEmailAddresses: email,
+      },
+    })
+    if (user) {
+      return {
+        userExists: true,
+        user: user,
+      }
+    } else {
+      return {
+        userExists: false,
+        user: null,
+      }
+    }
+  } catch (error) {
+    console.log(error)
+    throw new Error('Error checking if user exists')
+  }
+}
+
 export async function getAllUserInfo() {
   try {
     const users = await prisma.userInfo.findMany()

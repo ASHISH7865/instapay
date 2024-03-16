@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
-import { createTransactions } from '@/lib/actions/transactions.actions'
-import { CreateTransactionParams } from '@/types/transaction.types'
+import { depositMoneyToWallet } from '@/lib/actions/transactions.actions'
 import { NextResponse } from 'next/server'
 import stripe from 'stripe'
 
@@ -25,21 +24,25 @@ export async function POST(request: Request) {
   if (eventType === 'checkout.session.completed') {
     const { id, amount_total, metadata } = event.data.object
 
-    const transaction: CreateTransactionParams = {
-      userId: metadata?.userId || '',
-      transactionName: 'Wallet_Top_Up',
-      trnxType: 'CREDIT',
-      amount: amount_total ? amount_total / 100 : 0,
-      senderId: id, // stripe session id
-      receiverId: metadata?.userId || '', // buyer id
-      purpose: 'DEPOSIT',
-      balanceBefore: Number(metadata?.balanceBefore) || 0,
-      balanceAfter: Number(metadata?.balanceBefore) + Number(metadata?.credits) || 0,
-      status: 'COMPLETED',
-      trnxSummary: 'Wallet Top Up Successful',
-    }
+    // const transaction: CreateTransactionParams = {
+    //   userId: metadata?.userId || '',
+    //   transactionName: 'Wallet_Top_Up',
+    //   trnxType: 'CREDIT',
+    //   amount: amount_total ? amount_total / 100 : 0,
+    //   senderId: id, // stripe session id
+    //   receiverId: metadata?.userId || '', // buyer id
+    //   purpose: 'DEPOSIT',
+    //   balanceBefore: Number(metadata?.balanceBefore) || 0,
+    //   balanceAfter: Number(metadata?.balanceBefore) + Number(metadata?.credits) || 0,
+    //   status: 'COMPLETED',
+    //   trnxSummary: 'Wallet Top Up Successful',
+    // }
 
-    const newTransaction = await createTransactions(transaction)
+    const from = id
+    const to = metadata?.userId || ''
+    const amount = amount_total ? amount_total / 100 : 0
+
+    const newTransaction = await depositMoneyToWallet(from, to, amount)
 
     return NextResponse.json({ message: 'OK', transaction: newTransaction })
   }
