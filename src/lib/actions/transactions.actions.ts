@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Stripe from 'stripe'
 import prisma from '../prisma'
 import { CreateTransactionParams, Data } from '@/types/transaction.types'
+import { revalidatePath } from 'next/cache'
 
 export async function checkoutWalletMoney(data: Data) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
@@ -84,6 +85,13 @@ export async function createTransactions(transaction: CreateTransactionParams) {
         },
       },
     },
+    include:{
+      transactions:{
+        orderBy:{
+          createdAt:'asc'
+        }
+      },
+    }
   })
 
   // step-4
@@ -91,70 +99,6 @@ export async function createTransactions(transaction: CreateTransactionParams) {
     status: 'success',
     message: 'Transaction created successfully',
     data: newTransaction,
-  }
-}
-
-export async function reduceWalletBalance(userId: string, amount: number) {
-  const wallet = await prisma.wallet.findUnique({
-    where: {
-      userId,
-    },
-  })
-
-  if (!wallet) {
-    return {
-      status: 'error',
-      message: 'Wallet not found',
-    }
-  }
-
-  const updatedWallet = await prisma.wallet.update({
-    where: {
-      userId,
-    },
-    data: {
-      balance: {
-        decrement: amount,
-      },
-    },
-  })
-
-  return {
-    status: 'success',
-    message: 'Wallet balance updated successfully',
-    data: updatedWallet,
-  }
-}
-
-export async function increaseWalletBalance(userId: string, amount: number) {
-  const wallet = await prisma.wallet.findUnique({
-    where: {
-      userId,
-    },
-  })
-
-  if (!wallet) {
-    return {
-      status: 'error',
-      message: 'Wallet not found',
-    }
-  }
-
-  const updatedWallet = await prisma.wallet.update({
-    where: {
-      userId,
-    },
-    data: {
-      balance: {
-        increment: amount,
-      },
-    },
-  })
-
-  return {
-    status: 'success',
-    message: 'Wallet balance updated successfully',
-    data: updatedWallet,
   }
 }
 
@@ -293,59 +237,65 @@ export async function moneyTransfer(from: string, to: string, amount: number) {
     }
   }
 
-  console.log('sender', sender)
-  // const updatedSender = await prisma.wallet.update({
-  //   where: {
-  //     userId: from,
-  //   },
-  //   data: {
-  //     balance: {
-  //       decrement: amount,
-  //     },
-  //   },
-  // })
+  const updatedSender = await prisma.wallet.update({
+    where: {
+      userId: from,
+    },
+    data: {
+      balance: {
+        decrement: amount,
+      },
+    },
+  })
 
-  // const updatedReceiver = await prisma.wallet.update({
-  //   where: {
-  //     userId: to,
-  //   },
-  //   data: {
-  //     balance: {
-  //       increment: amount,
-  //     },
-  //   },
-  // })
+  const updatedReceiver = await prisma.wallet.update({
+    where: {
+      userId: to,
+    },
+    data: {
+      balance: {
+        increment: amount,
+      },
+    },
+  })
 
-  // await createTransactions({
-  //   transactionName: 'Wallet_Transfer',
-  //   userId: from,
-  //   trnxType: 'DEBIT',
-  //   purpose: 'TRANSFER',
-  //   senderId: from,
-  //   receiverId: to,
-  //   amount: amount,
-  //   status: 'COMPLETED',
-  //   balanceBefore: sender.balance,
-  //   balanceAfter: updatedSender.balance,
-  //   trnxSummary: 'Money transfer to ' + to + ' successful',
-  // })
+  const senderTransaction = await createTransactions({
+    transactionName: 'Wallet_Transfer',
+    userId: from,
+    trnxType: 'DEBIT',
+    purpose: 'TRANSFER',
+    senderId: from,
+    receiverId: to,
+    amount: amount,
+    status: 'COMPLETED',
+    balanceBefore: sender.balance,
+    balanceAfter: updatedSender.balance,
+    trnxSummary: 'Money transfer to ' + to + ' successful',
+  })
 
-  // await createTransactions({
-  //   transactionName: 'Wallet_Transfer',
-  //   userId: to,
-  //   trnxType: 'CREDIT',
-  //   purpose: 'TRANSFER',
-  //   senderId: from,
-  //   receiverId: to,
-  //   amount: amount,
-  //   status: 'COMPLETED',
-  //   balanceBefore: receiver.balance,
-  //   balanceAfter: updatedReceiver.balance,
-  //   trnxSummary: 'Money received from ' + from + ' successful',
-  // })
-
+  await createTransactions({
+    transactionName: 'Wallet_Transfer',
+    userId: to,
+    trnxType: 'CREDIT',
+    purpose: 'TRANSFER',
+    senderId: from,
+    receiverId: to,
+    amount: amount,
+    status: 'COMPLETED',
+    balanceBefore: receiver.balance,
+    balanceAfter: updatedReceiver.balance,
+    trnxSummary: 'Money received from ' + from + ' successful',
+  })
+  
+  revalidatePath('/dashboard')
   return {
     status: 'success',
     message: 'Money transferred successfully',
+    data :{
+      amount: amount,
+      senderId: from,
+      receiverId: to,
+      transactionID: senderTransaction.data?.transactions[0].id
+    }
   }
 }

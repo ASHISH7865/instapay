@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import React from 'react'
 import {
@@ -25,6 +26,7 @@ import VerfyTick from '@/LotteFiles/VerifyTick.json'
 import { WalletPin } from '../shared/WalletPin'
 import { moneyTransfer } from '@/lib/actions/transactions.actions'
 import { checkUserExistsByEmail } from '@/lib/actions/user.actions'
+import { PaymentSuccessModal } from '../modal/PaymentStatusModal'
 
 interface SendMoneyToWalletFormProps {
   transactionLimit: number
@@ -37,6 +39,8 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
   const { user } = useUser()
   const [openModal, setOpenModal] = React.useState(false)
   const [sendMoneyLoading, setSendMoneyLoading] = React.useState(false)
+  const [openSuccessModal, setOpenSuccessModal] = React.useState(false)
+  const [transaction, setTransaction] = React.useState<any>()
 
   const form = useForm<SendMoneyToWalletFormValuesType>({
     resolver: zodResolver(sendMoneyToWalletSchema),
@@ -99,13 +103,8 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
             parseFloat(form.getValues('amount').toString()),
           )
           if (transaction?.status === 'success') {
-            toast({
-              title: 'Transaction Successful',
-              description: `Transaction done successfully with amount ₹ ${form.getValues('amount')}`,
-              variant: 'default',
-            })
-            form.reset()
-            console.log('transaction done')
+            setOpenSuccessModal(true)
+            setTransaction(transaction)
             console.log(transaction)
           } else {
             toast({
@@ -202,6 +201,7 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
           )}
         </form>
       </Form>
+
       <div className='mt-5'>
         <h2 className='text-lg font-bold'>Note</h2>
         <p className='text-xs text-gray-500'>
@@ -222,6 +222,14 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
           </p>
         </div>
       )}
+
+      <PaymentSuccessModal
+        openModal={openSuccessModal}
+        setOpenModal={setOpenSuccessModal}
+        amount={transaction?.data?.amount || 0}
+        recieverName={transaction?.data?.receiverId || ""}
+        transactionId={transaction?.data?.transactionID || ''}
+      />
     </>
   )
 }
