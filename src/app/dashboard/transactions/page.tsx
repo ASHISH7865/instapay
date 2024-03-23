@@ -1,26 +1,15 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BreadcrumbItem, Breadcrumbs } from '@/components/ui/breadcrumb'
-import React, { useEffect } from 'react'
 
 import { getAllTransactionsByUserId } from '@/lib/actions/transactions.actions'
-import { useAuth } from '@clerk/nextjs'
-import { Transaction } from '@prisma/client'
-import TransactionsTable from '../wallet/components/WalletTransactionsTable'
+import { auth } from '@clerk/nextjs'
+import { DataTable } from './data-table'
+import { columns } from './column'
 
-const Transactions = () => {
-  const { userId } = useAuth()
-  const [transactions, setTransactions] = React.useState<Transaction[]>([])
-  const [loading, setLoading] = React.useState(false)
+const Transactions = async () => {
+  const { userId } = auth()
 
-  useEffect(() => {
-    if (userId) {
-      setLoading(true)
-      getAllTransactionsByUserId(userId).then((res) => {
-        setTransactions(res.transactions!)
-        setLoading(false)
-      })
-    }
-  }, [userId])
+  const transactions = await getAllTransactionsByUserId(userId ?? '')
 
   return (
     <div className='flex flex-col p-4 relative '>
@@ -28,12 +17,14 @@ const Transactions = () => {
         <BreadcrumbItem href='/dashboard'>Dashboard</BreadcrumbItem>
         <BreadcrumbItem href='/dashboard/transactions'>Transaction</BreadcrumbItem>
       </Breadcrumbs>
-      <TransactionsTable
+      {/* <TransactionsTable
         transactionHeading='All Transactions'
         transactions={transactions}
         loading={loading}
         itemsPerPage={20}
-      />
+      /> */}
+      <p className='text-2xl font-bold text-primary-100'>All Transactions</p>
+        <DataTable columns={columns} data={transactions.transactions as any} />
     </div>
   )
 }

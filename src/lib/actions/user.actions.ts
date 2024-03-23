@@ -107,3 +107,27 @@ export async function getAllUserInfo() {
     throw new Error('Error fetching users')
   }
 }
+
+
+export async function getUserInfoById(userId: string) {
+  try {
+    const user = await prisma.userInfo.findUnique({
+      where: {
+        userId: userId,
+      },
+    })
+    if (user) {
+      return {
+        message: 'User fetched successfully',
+        data: user,
+      }
+    }
+    return {
+      message: 'User not found',
+      data: null,
+    }
+}
+  catch (error) {
+    throw new Error('Error fetching user')
+  }
+}

@@ -1,5 +1,4 @@
 import React from 'react'
-import PaymentCard from './components/PaymentCard'
 import { BreadcrumbItem, Breadcrumbs } from '@/components/ui/breadcrumb'
 
 const Payments = () => {
@@ -13,30 +12,7 @@ const Payments = () => {
         <p className='text-2xl font-bold'> Payment Dashboard</p>
       </div>
       <div className='flex flex-row items-center justify-center gap-2 flex-wrap mt-10'>
-        <PaymentCard
-          title='Send Money'
-          buttonText='Send Money'
-          description='Send money to another wallet'
-          transactionLimit={2000}
-        />
-        {/* <PaymentCard
-          title='Request Money'
-          buttonText='Request Money'
-          description='Request money from another wallet'
-          transactionLimit='5,000'
-        /> */}
-        <PaymentCard
-          title='Beneficiary Transfer'
-          buttonText='Transfer Money'
-          description='Transfer money to a beneficiary'
-          transactionLimit={500000}
-        />
-        {/* <PaymentCard
-          title='Request Money'
-          buttonText='Request Money'
-          description='Request money from a beneficiary'
-          transactionLimit='1,00,000'
-        /> */}
+        
       </div>
     </div>
   )

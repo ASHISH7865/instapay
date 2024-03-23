@@ -3,7 +3,6 @@ import PaymentActionModal from '@/components/modal/payment-action-modal'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -18,12 +17,11 @@ interface PaymentCardProps {
 
 const PaymentCard = ({ title, buttonText, description, transactionLimit }: PaymentCardProps) => {
   return (
-    <Card className='w-[350px]'>
+    <Card className='w-[350px] min-h-[200px]'>
       <CardHeader>
         <CardTitle className='flex items-center '>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
         <CardContent>
-          <span className='text-sm font-bold mt-5'>
+          <span className='text-sm font-bold'>
             Transaction limit: <span className='text-primary'>₹ {transactionLimit}</span>
           </span>
         </CardContent>

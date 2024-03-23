@@ -49,9 +49,9 @@ const CheckBalance = (): JSX.Element => {
   }, [balance])
 
   return (
-    <div className='mt-5'>
+    <div className=''>
       {userWallet && (
-        <Card className='w-[350px]'>
+        <Card className='w-[350px] min-h-[200px]'>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <Wallet2 size={24} />

@@ -7,6 +7,7 @@ import TransactionsTable from './components/WalletTransactionsTable'
 import { Transaction } from '@prisma/client'
 import { useAuth } from '@clerk/nextjs'
 import { getWalletDepositTransactions } from '@/lib/actions/transactions.actions'
+import PaymentCard from '../payments/components/PaymentCard'
 
 const Wallet = () => {
   const { userId } = useAuth()
@@ -34,8 +35,14 @@ const Wallet = () => {
         <p className='text-2xl font-bold'>Wallet Dashboard</p>
         <AddMoneyModal />
       </div>
-      <div className='flex gap-6'>
+      <div className='flex flex-row  gap-2 flex-wrap mt-10'>
         <CheckBalance />
+        <PaymentCard
+          title='Send Money'
+          buttonText='Send Money'
+          description='Send money to another wallet'
+          transactionLimit={2000}
+        />
       </div>
       <TransactionsTable
         transactionHeading='Deposit Transactions'

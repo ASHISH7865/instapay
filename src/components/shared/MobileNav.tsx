@@ -1,48 +1,12 @@
 import React from 'react'
-import { HomeIcon, CalendarIcon, User, IndianRupee, CogIcon, Wallet } from 'lucide-react'
 import Link from 'next/link'
 import { UserButton, useUser } from '@clerk/nextjs'
 import { ModeToggle } from './mode-toggle'
 import { ThemeCustomizer } from './theme-customizer'
+import { SidebarContent } from '@/constant/sidebar'
 
 const MobileNav = () => {
-  const SidebarContent = [
-    {
-      name: 'Dashboard',
-      href: '/dashboard',
-      icon: HomeIcon,
-      current: true,
-    },
-    {
-      name: 'Beneficiaries',
-      href: '/dashboard/beneficiaries',
-      icon: User,
-      current: false,
-    },
-    {
-      name: 'Transactions',
-      href: '/dashboard/transactions',
-      icon: CalendarIcon,
-      current: false,
-    },
-    {
-      name: 'Wallet',
-      href: '/dashboard/wallet',
-      icon: Wallet,
-    },
-    {
-      name: 'Payments',
-      href: '/dashboard/payments',
-      icon: IndianRupee,
-      current: false,
-    },
-    {
-      name: 'Settings',
-      href: '/dashboard/settings',
-      icon: CogIcon,
-      current: false,
-    },
-  ]
+ 
 
   const { user } = useUser()
 
