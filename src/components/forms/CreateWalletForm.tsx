@@ -19,6 +19,7 @@ import Spinner from '../shared/spinner'
 import { TermAndCondition } from '../modal/term-condition'
 import { CreateWalletType, createWalletSchema } from '@/lib/ZodShemas/createWalletSchema'
 import { createUserWallet } from '@/lib/actions/wallet.actions'
+import { useRouter } from 'next/navigation'
 
 interface CreateWalletFormProps {
   close: () => void
@@ -28,6 +29,7 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
   const [walletLoading, setWalletLoading] = React.useState(false)
   const { userId } = useAuth()
   const { toast } = useToast()
+  const router = useRouter()
 
   const form = useForm<CreateWalletType>({
     resolver: zodResolver(createWalletSchema),
@@ -50,6 +52,7 @@ const CreateWalletForm = ({ close }: CreateWalletFormProps) => {
           title: 'Create Wallet Success',
           variant: 'default',
         })
+        router.push('/')
         close()
       } else {
         toast({

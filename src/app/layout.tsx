@@ -15,7 +15,13 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <head />
       <body>
-        <Suspense fallback={<Spinner size={8} />}>
+        <Suspense
+          fallback={
+            <div className='flex items-center justify-center h-screen'>
+              <Spinner />
+            </div>
+          }
+        >
           <ThemeProvider
             attribute='class'
             defaultTheme='system'

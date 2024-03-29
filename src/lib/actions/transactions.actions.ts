@@ -65,6 +65,25 @@ export async function createTransactions(transaction: CreateTransactionParams) {
     }
   }
 
+  const senderEmail = await prisma.userInfo.findUnique({
+    where: {
+      userId: transaction.senderId,
+    },
+  })
+
+  const receiverEmail = await prisma.userInfo.findUnique({
+    where: {
+      userId: transaction.receiverId,
+    },
+  })
+
+  if (!senderEmail || !receiverEmail) {
+    return {
+      status: 'error',
+      message: 'Sender or Receiver not found',
+    }
+  }
+
   // step-3
   const newTransaction = await prisma.wallet.update({
     where: {
@@ -75,8 +94,8 @@ export async function createTransactions(transaction: CreateTransactionParams) {
         create: {
           trnxType: transaction.trnxType,
           purpose: transaction.purpose,
-          senderId: transaction.senderId,
-          recipientId: transaction.receiverId,
+          senderId: senderEmail.primaryEmailAddresses,
+          recipientId: receiverEmail.primaryEmailAddresses,
           amount: transaction.amount,
           balanceBefore: transaction.balanceBefore,
           balanceAfter: transaction.balanceAfter,
@@ -85,13 +104,13 @@ export async function createTransactions(transaction: CreateTransactionParams) {
         },
       },
     },
-    include:{
-      transactions:{
-        orderBy:{
-          createdAt:'asc'
-        }
+    include: {
+      transactions: {
+        orderBy: {
+          createdAt: 'asc',
+        },
       },
-    }
+    },
   })
 
   // step-4
@@ -174,7 +193,7 @@ export async function depositMoneyToWallet(from: string, to: string, amount: num
     userId: to,
     trnxType: 'CREDIT',
     purpose: 'DEPOSIT',
-    senderId: `Stripe-${from}`,
+    senderId: `Stripe Bank`,
     receiverId: to,
     amount: amount,
     status: 'COMPLETED',
@@ -286,16 +305,16 @@ export async function moneyTransfer(from: string, to: string, amount: number) {
     balanceAfter: updatedReceiver.balance,
     trnxSummary: 'Money received from ' + from + ' successful',
   })
-  
+
   revalidatePath('/dashboard')
   return {
     status: 'success',
     message: 'Money transferred successfully',
-    data :{
+    data: {
       amount: amount,
       senderId: from,
       receiverId: to,
-      transactionID: senderTransaction.data?.transactions[0].id
-    }
+      transactionID: senderTransaction.data?.transactions[0].id,
+    },
   }
 }

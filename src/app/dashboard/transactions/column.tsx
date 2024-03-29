@@ -1,6 +1,8 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import { ColumnDef } from '@tanstack/react-table'
+import { ArrowUpDown } from 'lucide-react'
 
 export type Transaction = {
   id: string
@@ -21,7 +23,7 @@ export type Transaction = {
 export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: 'Transaction ID',
   },
   {
     accessorKey: 'senderId',
@@ -33,7 +35,17 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: 'trnxType',
-    header: 'Type',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Transaction Type
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: 'amount',
@@ -50,11 +62,15 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'createdAt',
     header: 'Date of Transaction',
-    cell : ({row}) => {
+    cell: ({ row }) => {
       const date = new Date(row.original.createdAt)
-      const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+      const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
       return formattedDate
-    }
+    },
   },
   {
     accessorKey: 'balanceBefore',
@@ -64,5 +80,4 @@ export const columns: ColumnDef<Transaction>[] = [
     accessorKey: 'balanceAfter',
     header: 'Balance After',
   },
-
 ]

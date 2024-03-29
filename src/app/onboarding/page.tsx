@@ -16,14 +16,19 @@ const Onboarding = () => {
   useEffect(() => {
     if (userId) {
       setLoading(true)
-      getUserInfo(userId).then((res) => {
-        if (res) {
-          setUserInfoExist(true)
-        } else {
-          setUserInfoExist(false)
-        }
-        setLoading(false)
-      })
+      getUserInfo(userId)
+        .then((res) => {
+          if (res) {
+            setUserInfoExist(true)
+          } else {
+            setUserInfoExist(false)
+          }
+          setLoading(false)
+        })
+        .catch((err) => {
+          console.log(err)
+          setLoading(false)
+        })  
     }
   }, [isLoaded, userId])
 

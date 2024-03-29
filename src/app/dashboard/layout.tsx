@@ -3,6 +3,11 @@ import Sidebar from '@/components/shared/sidebar'
 import { useWalletContext } from '@/provider/wallet-provider'
 import CreateWalletOverlay from '@/components/shared/CreateWalletOverlay'
 import MobileNav from '@/components/shared/MobileNav'
+import { getUserInfo } from '@/lib/actions/onbaording.action'
+import { useEffect, useState } from 'react'
+import { useAuth } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
+
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -10,6 +15,29 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { userWallet } = useWalletContext()
+  const [userInfoExist, setUserInfoExist] = useState(false)
+  const { userId } = useAuth()
+  const router = useRouter()
+  useEffect(() => {
+    if (userId) {
+      getUserInfo(userId)
+        .then((res) => {
+          if (res) {
+            setUserInfoExist(true)
+          } else {
+            setUserInfoExist(false)
+            router.push('/onboarding')
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [])
+  
+  if( !userInfoExist) {
+    return null
+  }
 
   return (
     <div className='flex flex-col md:flex-row md:h-screen bg-background'>

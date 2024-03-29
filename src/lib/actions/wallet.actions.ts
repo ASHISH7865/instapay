@@ -72,7 +72,7 @@ export async function createUserWallet(userId: string, data: CreateWalletType) {
         },
       })
 
-      revalidatePath('/dashboard/wallet')
+      revalidatePath('/dashboard')
       return {
         status: 'success',
         message: 'Wallet created successfully',
@@ -92,6 +92,7 @@ export async function getUserWallet(userId: string) {
       },
     })
 
+    revalidatePath('/dashboard')
     return {
       status: 'success',
       message: 'Wallet found',
