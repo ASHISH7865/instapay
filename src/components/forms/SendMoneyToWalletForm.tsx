@@ -190,7 +190,7 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
           )}
           {!isWalletVerified ? (
             <Button type='submit' variant='secondary' className='self-start'>
-              Veryfy Wallet
+              Verify Wallet
             </Button>
           ) : (
             <WalletPin
