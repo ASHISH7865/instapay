@@ -38,52 +38,7 @@ export async function checkoutWalletMoney(data: Data) {
 }
 
 export async function createTransactions(transaction: CreateTransactionParams) {
-  const user = await prisma.userInfo.findUnique({
-    where: {
-      userId: transaction.userId,
-    },
-  })
-
-  if (!user) {
-    return {
-      status: 'error',
-      message: 'User not found',
-    }
-  }
-
-  // step-2
-  const wallet = await prisma.wallet.findUnique({
-    where: {
-      userId: transaction.userId,
-    },
-  })
-
-  if (!wallet) {
-    return {
-      status: 'error',
-      message: 'Wallet not found',
-    }
-  }
-
-  const senderEmail = await prisma.userInfo.findUnique({
-    where: {
-      userId: transaction.senderId,
-    },
-  })
-
-  const receiverEmail = await prisma.userInfo.findUnique({
-    where: {
-      userId: transaction.receiverId,
-    },
-  })
-
-  if (!senderEmail || !receiverEmail) {
-    return {
-      status: 'error',
-      message: 'Sender or Receiver not found',
-    }
-  }
-
+ 
   // step-3
   const newTransaction = await prisma.wallet.update({
     where: {
@@ -94,8 +49,8 @@ export async function createTransactions(transaction: CreateTransactionParams) {
         create: {
           trnxType: transaction.trnxType,
           purpose: transaction.purpose,
-          senderId: senderEmail.primaryEmailAddresses,
-          recipientId: receiverEmail.primaryEmailAddresses,
+          senderId: transaction.senderId,
+          recipientId: transaction.receiverId,
           amount: transaction.amount,
           balanceBefore: transaction.balanceBefore,
           balanceAfter: transaction.balanceAfter,
@@ -161,7 +116,6 @@ export async function getAllTransactionsByUserId(userId: string) {
 }
 
 export async function depositMoneyToWallet(from: string, to: string, amount: number) {
-  console.log(from, to, amount)
   //here from is the stripe session id and to is the user id
 
   const wallet = await prisma.wallet.findUnique({
