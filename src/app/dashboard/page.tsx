@@ -46,7 +46,7 @@ export default function Dashboard() {
         Welcome back, {userData?.fullName}
       </h1>
       <div className="grid grid-cols-6 w-full gap-10  mt-20">
-        <div className='h-[200px] col-span-3 mb-20'>
+        <div className='h-[200px] col-span-full lg:col-span-3 mb-20'>
           {depositData?.debitChartData ?
             <>
               <AreaChartComponent data={depositData.debitChartData} strokeColor='#888888' />
@@ -55,7 +55,7 @@ export default function Dashboard() {
             <p className='text-md text-center'>No transactions yet</p>
           }
         </div>
-        <div className='h-[200px] col-span-3 mb-20'>
+        <div className='h-[200px] col-span-full lg:col-span-3 mb-20'>
           {depositData?.creditChartData ?
             <>
               <AreaChartComponent  data={depositData.creditChartData} strokeColor='#888888' />
@@ -66,7 +66,7 @@ export default function Dashboard() {
         </div>
         <div className='col-span-full lg:col-span-2'>
           {
-            totalTransactionsAmount && <StatisticsCard title='Total Balance' amount={totalTransactionsAmount?.totalBalance} />
+            totalTransactionsAmount && <StatisticsCard title='Debit' amount={totalTransactionsAmount?.totalDebitAmount} />
           }
         </div>
         <div className='col-span-full lg:col-span-2 col-start-1'>
