@@ -1,6 +1,5 @@
 import React from 'react'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { Button } from '../ui/button'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import Lottie from 'lottie-react'
 import Success from '@/LotteFiles/paymentSuccess.json'
 

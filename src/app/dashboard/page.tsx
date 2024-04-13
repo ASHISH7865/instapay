@@ -44,7 +44,7 @@ export default function Dashboard() {
       <h1 className='text-2xl font-bold '>
         Welcome back, {userData?.fullName}
       </h1>
-      <div className="grid xl:grid-cols-3 lg:grid-cols-2 w-full gap-10  mt-20">
+      <div className="grid grid-cols-3 w-full gap-10  mt-20">
         <div className='h-[200px] col-span-3 mb-20'>
           {depositData.length > 1 ?
             <>
@@ -54,13 +54,13 @@ export default function Dashboard() {
             <p className='text-md text-center'>No transactions yet</p>
           }
         </div>
-        <div className='col-span-1'>
+        <div className='col-span-full lg:col-span-1'>
           <StatisticsCard title='Credit' amount={totalTransactionsAmount?.totalCreditAmount} />
         </div>
-        <div className='col-span-1'>
+        <div className='col-span-full lg:col-span-1'>
           <StatisticsCard title='Debit' amount={totalTransactionsAmount?.totalDebitAmount} />
         </div>
-        <div className='col-span-1'>
+        <div className='col-span-full lg:col-span-1'>
           {
             recentTransactions.length > 1 && <RecentTransactionCard transactions={recentTransactions} />
           }
