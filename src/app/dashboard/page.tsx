@@ -49,7 +49,7 @@ export default function Dashboard() {
           {depositData.length > 1 ?
             <>
               <AreaChartComponent data={depositData} />
-              <p className='text-md text-center'>Credit and Debit Transactions</p>
+              <p className='text-md text-center mt-10'>Credit and Debit Transactions</p>
             </> :
             <p className='text-md text-center'>No transactions yet</p>
           }
