@@ -45,8 +45,3 @@ export const AreaChartComponent = ({data} :LineChartProps) => {
   </ResponsiveContainer>
   );
 };
-
-
-export const  BarChartComponent = ({data} :any) => {
-  
-}
