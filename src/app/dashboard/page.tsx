@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import TotalBalanceChart from '@/components/charts/TotalBalanceChart'
+// import TotalBalanceChart from '@/components/charts/TotalBalanceChart'
 import { BreadcrumbItem, Breadcrumbs } from '@/components/ui/breadcrumb'
 import { getTotalBalanceChartData } from '@/lib/actions/chart.actions'
 import { useAuth, useUser } from '@clerk/nextjs'
