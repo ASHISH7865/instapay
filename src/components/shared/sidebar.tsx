@@ -20,7 +20,7 @@ const Sidebar = () => {
       <nav className='mt-10 flex  flex-col items-start ml-10  '>
         {SidebarContent.map((item, index) => (
           <Link key={index} href={item.href} className='flex items-center gap-2 p-2 m-2 text-sm'>
-            <item.icon className={`${item.current ? 'text-primary' : ''}`} size={20} />
+            <item.icon className={`${item.current ? 'text-primary-1' : ''}`} size={20} />
             <span className={`${item.current ? 'text-primary' : ''}`}>{item.name}</span>
           </Link>
         ))}

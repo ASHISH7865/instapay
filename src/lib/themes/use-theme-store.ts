@@ -50,7 +50,7 @@ export const useThemeStore = create<State & Actions>()(
         },
       }),
       {
-        name: 'jolly-ui-theme-store',
+        name: 'theme-config',
         version: 2,
       },
     ),
