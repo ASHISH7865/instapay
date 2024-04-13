@@ -3,7 +3,6 @@
 import {
   ResponsiveContainer,
   Area,
-  Tooltip,
   AreaChart,
 } from 'recharts';
 
