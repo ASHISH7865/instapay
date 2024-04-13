@@ -40,7 +40,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   }
 
   return (
-    <div className='flex flex-col md:flex-row md:h-screen bg-background'>
+    <div className='flex flex-col md:flex-row md:h-screen '>
       <div className='w-64 md:h-[calc(100vh-16px)] bg-primary-800 border-r border-primary-700 transition-colors duration-300 hidden md:block '>
         <Sidebar />
       </div>

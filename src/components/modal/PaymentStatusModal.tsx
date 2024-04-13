@@ -21,9 +21,6 @@ export const PaymentSuccessModal = ({
 }: PaymentSuccessModalProps) => {
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
-      <DialogTrigger asChild>
-        <Button variant={'secondary'}>open modal</Button>
-      </DialogTrigger>
       <DialogContent className='  h-[600px] w-[400px]'>
         <div className='flex w-full justify-between items-center h-full flex-col mt-6'>
           <div className='flex items-center gap-2 flex-col'>

@@ -32,13 +32,13 @@ export const AreaChartComponent = ({data} :LineChartProps) => {
       <Area
         type="monotone"
         dataKey="value1"
-        stroke="#6a6b70"
+        stroke="#12562a"
         fill="url(#colorview)"
       />
       <Area
         type="monotone"
         dataKey="value2"
-        stroke="#4c566a"
+        stroke="#720714"
         fill="url(#colorview)"
       />
     </AreaChart>

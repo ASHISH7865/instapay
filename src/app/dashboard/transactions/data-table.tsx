@@ -50,14 +50,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
   return (
     <>
-      <div className='flex items-center py-4'>
-        <Input
-          placeholder='Filter emails...'
-          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
-          className='max-w-sm'
-        />
-      </div>
       <div className='rounded-md border  mt-5 w-full max-h-[calc(100vh-200px)] overflow-y-auto  '>
         <Table className=''>
           <TableHeader>
