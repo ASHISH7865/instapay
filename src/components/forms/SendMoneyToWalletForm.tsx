@@ -105,7 +105,6 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
           if (transaction?.status === 'success') {
             setOpenSuccessModal(true)
             setTransaction(transaction)
-            console.log(transaction)
           } else {
             toast({
               title: 'Transaction Failed',

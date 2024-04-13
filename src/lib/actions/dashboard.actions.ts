@@ -55,7 +55,6 @@ export async function getTotalBalanceChartData(userId: string) {
         },
       },
     })
-
     // tranform data to the format required by the chart component
     // e.g. [{key: '2021-01-01', value: 1000}, {key: '2021-01-02', value: 2000}]
     const transformedData1 = data1?.wallet?.transactions.map((transaction) => {
@@ -66,7 +65,7 @@ export async function getTotalBalanceChartData(userId: string) {
           months[transaction.createdAt.getMonth()].short +
           '-' +
           transaction.createdAt.getFullYear(),
-        value1: transaction.amount,
+        value: transaction.amount,
       }
     })
 
@@ -78,23 +77,14 @@ export async function getTotalBalanceChartData(userId: string) {
           months[transaction.createdAt.getMonth()].short +
           '-' +
           transaction.createdAt.getFullYear(),
-        value2: transaction.amount,
-      }
-    })
-
-    // merge data beased on key [{key:"2021-01-01", value1: 1000, value2: 2000}]
-    const transformedData = transformedData1?.map((data1) => {
-      const data2 = transformedData2?.find((data2) => data2.key === data1.key)
-      return {
-        key: data1.key,
-        value1: data1.value1,
-        value2: data2?.value2,
+        value: transaction.amount,
       }
     })
       
 
     return {
-      totalBalanceChartData: transformedData,
+      debitChartData: transformedData2,
+      creditChartData: transformedData1,
     }
   } catch (error) {
     console.error('Error fetching total balance chart data:', error)

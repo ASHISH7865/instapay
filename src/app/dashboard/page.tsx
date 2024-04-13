@@ -12,7 +12,7 @@ export default function Dashboard() {
   const { user: userData } = useUser()
 
   const { isLoaded: isUserLoaded, isSignedIn } = useUser()
-  const [depositData, setDepositData] = useState<any>([])
+  const [depositData, setDepositData] = useState<any>(null)
   const [recentTransactions, setRecentTransactions] = useState<any>([])
   const [totalTransactionsAmount, setTotalTransactionsAmount] = useState<any>(null)
 
@@ -24,7 +24,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     getTotalBalanceChartData(userId).then((data) => {
-      setDepositData(data?.totalBalanceChartData)
+      setDepositData(data)
     })
 
     getRecentTransactions(userId).then((data) => {
@@ -35,7 +35,8 @@ export default function Dashboard() {
       setTotalTransactionsAmount(data)
     })
   }, [userId])
-  console.log(recentTransactions)
+
+
   return (
     <div className='flex flex-col p-4'>
       <Breadcrumbs>
@@ -44,27 +45,41 @@ export default function Dashboard() {
       <h1 className='text-2xl font-bold '>
         Welcome back, {userData?.fullName}
       </h1>
-      <div className="grid grid-cols-3 w-full gap-10  mt-20">
+      <div className="grid grid-cols-6 w-full gap-10  mt-20">
         <div className='h-[200px] col-span-3 mb-20'>
-          {depositData.length > 1 ?
+          {depositData?.debitChartData ?
             <>
-              <AreaChartComponent data={depositData} />
-              <p className='text-md text-center mt-10'>Credit and Debit Transactions</p>
+              <AreaChartComponent data={depositData.debitChartData} strokeColor='#888888' />
+              <p className='text-md text-center mt-10'>Debit Transactions</p>
             </> :
             <p className='text-md text-center'>No transactions yet</p>
           }
         </div>
-        <div className='col-span-full lg:col-span-1'>
-          <StatisticsCard title='Credit' amount={totalTransactionsAmount?.totalCreditAmount} />
+        <div className='h-[200px] col-span-3 mb-20'>
+          {depositData?.creditChartData ?
+            <>
+              <AreaChartComponent  data={depositData.creditChartData} strokeColor='#888888' />
+              <p className='text-md text-center mt-10'>Credit Transactions</p>
+            </> :
+            <p className='text-md text-center'>No transactions yet</p>
+          }
         </div>
-        <div className='col-span-full lg:col-span-1'>
-          <StatisticsCard title='Debit' amount={totalTransactionsAmount?.totalDebitAmount} />
+        <div className='col-span-full lg:col-span-2'>
+          {
+            totalTransactionsAmount && <StatisticsCard title='Total Balance' amount={totalTransactionsAmount?.totalBalance} />
+          }
         </div>
-        <div className='col-span-full lg:col-span-1'>
+        <div className='col-span-full lg:col-span-2 col-start-1'>
+          {
+            totalTransactionsAmount && <StatisticsCard title='Credit' amount={totalTransactionsAmount?.totalCreditAmount} />
+          }
+        </div>
+        <div className='col-span-full lg:col-span-2'>
           {
             recentTransactions.length > 1 && <RecentTransactionCard transactions={recentTransactions} />
           }
         </div>
+
       </div>
     </div>
   )
@@ -72,7 +87,6 @@ export default function Dashboard() {
 
 
 const RecentTransactionCard = ({ transactions }: { transactions: any }) => {
-  console.log(transactions)
   return (
     <div className='border p-4 rounded-lg shadow-md'>
       <h2 className='text-md font-bold text-center'>Recent Transactions</h2>

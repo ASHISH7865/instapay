@@ -8,9 +8,17 @@ import {
 
 export interface LineChartProps {
   data: { key: string; value: number }[];
+  strokeColor?: string;
 }
 
-export const AreaChartComponent = ({data} :LineChartProps) => {
+export const AreaChartComponent = ({data , strokeColor} :LineChartProps) => {
+  
+const generateStrokeVariant = (color: string) => {
+  const stopColor1 = color + '11';
+  const stopColor2 = color;
+  return { stopColor1, stopColor2 };
+};
+
   return (
     <ResponsiveContainer width="100%" height="100%">
     <AreaChart
@@ -23,21 +31,15 @@ export const AreaChartComponent = ({data} :LineChartProps) => {
     >
       <defs>
         <linearGradient id="colorview" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="30%" stopColor="#7a7a7a" stopOpacity={0.4} />
-          <stop offset="85%" stopColor="#7a7a7a11" stopOpacity={0.2} />
+          <stop offset="30%" stopColor={generateStrokeVariant(strokeColor || "#7a7a7a").stopColor2} stopOpacity={0.4} />
+          <stop offset="85%" stopColor={generateStrokeVariant(strokeColor || "#7a7a7a").stopColor1} stopOpacity={0.2} />
         </linearGradient>
-      </defs>
+      </defs> 
       {/* <Tooltip cursor={false} /> */}
       <Area
         type="monotone"
-        dataKey="value1"
-        stroke="#12562a"
-        fill="url(#colorview)"
-      />
-      <Area
-        type="monotone"
-        dataKey="value2"
-        stroke="#720714"
+        dataKey="value"
+        stroke={strokeColor || '#7a7a7a'}
         fill="url(#colorview)"
       />
     </AreaChart>
