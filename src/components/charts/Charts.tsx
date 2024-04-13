@@ -28,7 +28,7 @@ export const AreaChartComponent = ({data} :LineChartProps) => {
           <stop offset="85%" stopColor="#7a7a7a11" stopOpacity={0.2} />
         </linearGradient>
       </defs>
-      <Tooltip cursor={false} />
+      {/* <Tooltip cursor={false} /> */}
       <Area
         type="monotone"
         dataKey="value1"
