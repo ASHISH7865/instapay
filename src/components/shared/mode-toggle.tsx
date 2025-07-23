@@ -19,7 +19,6 @@ import { useEffect } from 'react'
 export function ModeToggle() {
   const { setTheme, resolvedTheme } = useTheme()
   const currentGrayColor = useThemeStore((state) => state.grayColor)
-  const currentAccentColor = useThemeStore((state) => state.accentColor)
   const currentFontFamily = useThemeStore((state) => state.fontFamily)
   const currentBorderRadius = useThemeStore((state) => state.borderRadius)
 
@@ -28,8 +27,9 @@ export function ModeToggle() {
   }, [currentGrayColor, resolvedTheme])
 
   useEffect(() => {
-    syncThemeColor(currentAccentColor, resolvedTheme)
-  }, [currentAccentColor, resolvedTheme])
+    // Always use InstaPay theme
+    syncThemeColor('instapay', resolvedTheme)
+  }, [resolvedTheme])
 
   useEffect(() => {
     syncFontFamily(currentFontFamily)

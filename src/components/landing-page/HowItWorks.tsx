@@ -1,66 +1,89 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { IndianRupee, Users, ShieldCheck, Award } from 'lucide-react'
+import { UserPlus, CreditCard, Zap, CheckCircle } from 'lucide-react'
 
-interface FeatureProps {
-  icon: JSX.Element
-  title: string
-  description: string
+interface StepProps {
+    step: number
+    icon: JSX.Element
+    title: string
+    description: string
 }
 
-const features: FeatureProps[] = [
-  {
-    icon: <IndianRupee />,
-    title: 'Instant Transfers',
-    description:
-      'Transfer money instantly to friends and family, anytime, anywhere with our fast and secure transaction system.',
-  },
-  {
-    icon: <Users />,
-    title: 'Community Collaboration',
-    description:
-      'Join our vibrant community! Easily split bills with friends, making shared expenses hassle-free.',
-  },
-  {
-    icon: <ShieldCheck />,
-    title: 'Secure Transactions',
-    description:
-      'Rest easy with our robust security measures ensuring safe transactions and protecting your financial data.',
-  },
-  {
-    icon: <Award />,
-    title: 'Rewards and Gamification',
-    description:
-      'Enjoy gamified features and rewards! Earn points for transactions and redeem exciting rewards from our partners.',
-  },
+const steps: StepProps[] = [
+    {
+        step: 1,
+        icon: <UserPlus className="h-6 w-6" />,
+        title: 'Create Account',
+        description: 'Sign up in under 2 minutes with just your email and phone number. No complicated forms.',
+    },
+    {
+        step: 2,
+        icon: <CreditCard className="h-6 w-6" />,
+        title: 'Add Payment Method',
+        description: 'Link your bank account or add a debit card. We use bank-level security to keep your data safe.',
+    },
+    {
+        step: 3,
+        icon: <Zap className="h-6 w-6" />,
+        title: 'Start Sending Money',
+        description: 'Send money instantly to anyone with just their phone number or email address.',
+    },
+    {
+        step: 4,
+        icon: <CheckCircle className="h-6 w-6" />,
+        title: 'Track & Manage',
+        description: 'Monitor your transactions, set budgets, and get insights into your spending habits.',
+    },
 ]
 
 export const HowItWorks = () => {
-  return (
-    <section id='howItWorks' className='container text-center py-24 sm:py-32'>
-      <h2 className='text-3xl md:text-4xl font-bold '>
-        How It{' '}
-        <span className='bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text'>
-          Works{' '}
-        </span>
-        Step-by-Step Guide
-      </h2>
-      <p className='md:w-3/4 mx-auto mt-4 mb-8 text-xl text-muted-foreground'>
-        Experience the convenience and features of Instapay with our simple step-by-step guide.
-      </p>
+    return (
+        <section className='container py-24 sm:py-32'>
+            <div className='text-center space-y-4 mb-16'>
+                <h2 className='text-3xl md:text-4xl font-bold tracking-tight'>
+                    Get started in
+                    <span className='bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'> 4 simple steps</span>
+                </h2>
+                <p className='text-xl text-muted-foreground max-w-2xl mx-auto'>
+                    Setting up your Instapay account is quick and easy. Start sending money in minutes, not days.
+                </p>
+            </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
-        {features.map(({ icon, title, description }: FeatureProps) => (
-          <Card key={title} className='bg-muted/50'>
-            <CardHeader>
-              <CardTitle className='grid gap-4 place-items-center'>
-                {icon}
-                {title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>{description}</CardContent>
-          </Card>
-        ))}
-      </div>
-    </section>
-  )
+            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
+                {steps.map(({ step, icon, title, description }: StepProps) => (
+                    <Card key={step} className='group border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm relative overflow-hidden'>
+                        <CardHeader className='pb-4'>
+                            <div className='flex items-center justify-between mb-4'>
+                                <div className='w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg'>
+                                    {step}
+                                </div>
+                                <div className='w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform'>
+                                    {icon}
+                                </div>
+                            </div>
+                            <CardTitle className='text-lg font-semibold text-left'>{title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className='text-muted-foreground text-sm leading-relaxed'>
+                                {description}
+                            </p>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+
+            {/* Connection lines for desktop */}
+            <div className='hidden lg:flex justify-center items-center relative mt-16 mx-auto w-full max-w-2xl'>
+                <div className='w-1/2 h-0.5 bg-gradient-to-r from-blue-500/20 to-purple-500/20'></div>
+                <div className='w-1/2 h-0.5 bg-gradient-to-r from-purple-500/20 to-blue-500/20'></div>
+            </div>
+
+            {/* Bottom CTA */}
+            <div className='text-center mt-16'>
+                <div className='inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-sm font-medium shadow-lg hover:shadow-xl transition-shadow cursor-pointer'>
+                    <span>Start your free account</span>
+                    <CheckCircle className='h-4 w-4' />
+                </div>
+            </div>
+        </section>
+    )
 }

@@ -7,12 +7,10 @@ const borderRadius = ['0', '0.3', '0.5', '0.75', '1', '2'] as const
 export type BorderRadius = (typeof borderRadius)[number]
 
 export const useThemeGenerator = () => {
-  const currentAccentColor = useThemeStore((state) => state.accentColor)
   const currentGrayColor = useThemeStore((state) => state.grayColor)
   const currentBorderRadius = useThemeStore((state) => state.borderRadius)
   const currentStyle = useThemeStore((state) => state.style)
 
-  const updateAccentColor = useThemeStore((state) => state.setAccentColor)
   const updateGrayColor = useThemeStore((state) => state.setGrayColor)
   const updateBorderRadius = useThemeStore((state) => state.setBorderRadius)
   const updateStyle = useThemeStore((state) => state.setStyle)
@@ -22,11 +20,9 @@ export const useThemeGenerator = () => {
   return {
     themes,
     grayColors,
-    currentAccentColor,
     currentBorderRadius,
     borderRadius,
     currentGrayColor,
-    updateAccentColor,
     updateGrayColor,
     updateBorderRadius,
     updateStyle,

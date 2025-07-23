@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
@@ -11,81 +11,557 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model UserInfo {
-  id                    String        @id @default(uuid())
-  userId                String        @unique
-  firstName             String
-  lastName              String
-  username              String        @unique
-  primaryEmailAddresses String        @unique
-  gender                String
-  phoneNumber           String        @unique
-  city                  String
-  state                 String
-  country               String
-  postalCode            String
-  setupCompleted        Boolean       @default(false)
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
-  // Relationships with wallet should  be one to one
-  wallet                Wallet?
+// datasource db {
+//     provider = "postgresql"
+//     url      = env("DATABASE_URL")
+// }
+
+// ================================
+// USER MANAGEMENT MODELS
+// ================================
+
+model User {
+    id          String    @id @default(uuid())
+    clerkId     String    @unique // Clerk user ID
+    email       String    @unique
+    username    String    @unique
+    firstName   String
+    lastName    String
+    displayName String?
+    avatar      String?
+    phoneNumber String?   @unique
+    dateOfBirth DateTime?
+    gender      Gender?
+
+    // Address Information
+    address Address?
+
+    // Account Status
+    isActive      Boolean   @default(true)
+    isVerified    Boolean   @default(false)
+    emailVerified Boolean   @default(false)
+    phoneVerified Boolean   @default(false)
+    kycStatus     KYCStatus @default(PENDING)
+
+    // Security
+    twoFactorEnabled   Boolean   @default(false)
+    lastLoginAt        DateTime?
+    loginAttempts      Int       @default(0)
+    accountLockedUntil DateTime?
+
+    // Preferences
+    language             String @default("en")
+    timezone             String @default("UTC")
+    notificationSettings Json? // Store notification preferences as JSON
+    privacySettings      Json? // Store privacy settings as JSON
+
+    // Timestamps
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deletedAt DateTime? // Soft delete
+
+    // Relationships
+    wallets              Wallet[]
+    transactions         Transaction[]   @relation("UserTransactions")
+    sentTransactions     Transaction[]   @relation("SentTransactions")
+    receivedTransactions Transaction[]   @relation("ReceivedTransactions")
+    paymentMethods       PaymentMethod[]
+    beneficiaries        Beneficiary[]
+    notifications        Notification[]
+    sessions             UserSession[]
+    securityLogs         SecurityLog[]
+    supportTickets       SupportTicket[]
+
+    @@map("users")
 }
+
+model Address {
+    id         String   @id @default(uuid())
+    userId     String   @unique
+    street     String
+    city       String
+    state      String
+    country    String
+    postalCode String
+    latitude   Float?
+    longitude  Float?
+    isDefault  Boolean  @default(true)
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("addresses")
+}
+
+// ================================
+// WALLET & FINANCIAL MODELS
+// ================================
 
 model Wallet {
-  id                 String   @id @default(uuid())
-  walletUniqueName   String   @unique
-  balance            Float
-  walletPasswordType String
-  walletPin          String
-  currencyPreference String
-  usagePreference    String
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  transactionLimit   Float
-  // Define foreign keys and relationships
-  user               UserInfo @relation(fields: [userId], references: [userId])
-  userId             String   @unique
+    id               String     @id @default(uuid())
+    userId           String
+    name             String // Custom wallet name
+    type             WalletType @default(PERSONAL)
+    currency         Currency   @default(USD)
+    balance          Decimal    @default(0) @db.Decimal(15, 2)
+    availableBalance Decimal    @default(0) @db.Decimal(15, 2) // Balance minus pending transactions
 
-  // relationships with transaction should be one to many
-  transactions       Transaction[]
+    // Security
+    pin            String // Hashed PIN
+    pinAttempts    Int       @default(0)
+    pinLockedUntil DateTime?
+
+    // Limits and Settings
+    dailySpendLimit   Decimal? @db.Decimal(15, 2)
+    monthlySpendLimit Decimal? @db.Decimal(15, 2)
+    transactionLimit  Decimal  @default(5000) @db.Decimal(15, 2)
+
+    // Status
+    status    WalletStatus @default(ACTIVE)
+    isDefault Boolean      @default(false)
+
+    // Timestamps
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relationships
+    user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    transactions   Transaction[]
+    paymentMethods PaymentMethod[]
+
+    @@unique([userId, name])
+    @@map("wallets")
 }
 
-// Define the Transaction table
 model Transaction {
-  id            String             @id @default(uuid())
-  trnxType      TransactionType
-  purpose       TransactionPurpose
-  senderId      String
-  recipientId   String
-  amount        Float
-  balanceBefore Float
-  balanceAfter  Float
-  status        TransactionStatus  @default(PENDING)
-  trnxSummary String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+    id String @id @default(uuid())
 
-  // Define foreign keys and relationships
-  wallet       Wallet @relation(fields: [walletId], references: [id])
-  walletId     String
+    // Transaction Details
+    type         TransactionType
+    category     TransactionCategory
+    subCategory  String?
+    amount       Decimal             @db.Decimal(15, 2)
+    currency     Currency
+    exchangeRate Decimal?            @db.Decimal(10, 6) // For currency conversions
+    fee          Decimal             @default(0) @db.Decimal(15, 2)
+    netAmount    Decimal             @db.Decimal(15, 2) // Amount after fees
 
+    // Participants
+    userId      String // Transaction owner
+    walletId    String
+    senderId    String? // For transfers
+    recipientId String? // For transfers
+
+    // Balance tracking
+    balanceBefore Decimal @db.Decimal(15, 2)
+    balanceAfter  Decimal @db.Decimal(15, 2)
+
+    // Status and Processing
+    status       TransactionStatus @default(PENDING)
+    statusReason String?
+    processedAt  DateTime?
+
+    // Transaction Details
+    description      String
+    reference        String? @unique // External reference
+    merchantName     String?
+    merchantCategory String?
+    location         Json? // Store location data as JSON
+
+    // Payment Method
+    paymentMethodId String?
+
+    // Metadata
+    metadata Json? // Store additional data as JSON
+    tags     String[] // User-defined tags
+
+    // Security
+    ipAddress         String?
+    userAgent         String?
+    deviceFingerprint String?
+
+    // Timestamps
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    scheduledAt DateTime? // For scheduled transactions
+
+    // Relationships
+    user          User           @relation("UserTransactions", fields: [userId], references: [id])
+    wallet        Wallet         @relation(fields: [walletId], references: [id])
+    sender        User?          @relation("SentTransactions", fields: [senderId], references: [id])
+    recipient     User?          @relation("ReceivedTransactions", fields: [recipientId], references: [id])
+    paymentMethod PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+
+    @@index([userId, createdAt])
+    @@index([walletId, createdAt])
+    @@index([status])
+    @@index([type, category])
+    @@map("transactions")
+}
+
+model PaymentMethod {
+    id       String  @id @default(uuid())
+    userId   String
+    walletId String?
+
+    // Payment Method Details
+    type              PaymentMethodType
+    provider          String // stripe, paypal, etc.
+    providerAccountId String // External account ID
+
+    // Card Details (if applicable)
+    last4       String?
+    brand       String? // visa, mastercard, etc.
+    expiryMonth Int?
+    expiryYear  Int?
+
+    // Bank Details (if applicable)
+    bankName      String?
+    accountType   String? // checking, savings
+    routingNumber String?
+
+    // Status
+    isDefault  Boolean @default(false)
+    isActive   Boolean @default(true)
+    isVerified Boolean @default(false)
+
+    // Timestamps
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relationships
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    wallet       Wallet?       @relation(fields: [walletId], references: [id])
+    transactions Transaction[]
+
+    @@map("payment_methods")
+}
+
+model Beneficiary {
+    id     String @id @default(uuid())
+    userId String
+
+    // Beneficiary Details
+    name          String
+    email         String?
+    phoneNumber   String?
+
+    // Relationship
+    relationship String? // friend, family, business, etc.
+    nickname     String?
+
+    // Status
+    isActive   Boolean @default(true)
+    isFavorite Boolean @default(false)
+
+    // Usage Stats
+    lastUsedAt        DateTime?
+    totalTransactions Int       @default(0)
+    totalAmount       Decimal   @default(0) @db.Decimal(15, 2)
+
+    // Timestamps
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relationships
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("beneficiaries")
+}
+
+// ================================
+// NOTIFICATION & COMMUNICATION
+// ================================
+
+model Notification {
+    id     String @id @default(uuid())
+    userId String
+
+    // Notification Details
+    type      NotificationType
+    title     String
+    message   String
+    actionUrl String?
+
+    // Status
+    isRead     Boolean @default(false)
+    isArchived Boolean @default(false)
+
+    // Delivery
+    channels NotificationChannel[] // email, push, sms
+    sentAt   DateTime?
+    readAt   DateTime?
+
+    // Metadata
+    metadata Json?
+
+    // Timestamps
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    expiresAt DateTime?
+
+    // Relationships
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId, isRead])
+    @@index([createdAt])
+    @@map("notifications")
+}
+
+// ================================
+// SECURITY & AUDIT MODELS
+// ================================
+
+model UserSession {
+    id           String @id @default(uuid())
+    userId       String
+    sessionToken String @unique
+
+    // Session Details
+    ipAddress  String
+    userAgent  String
+    deviceInfo Json?
+    location   Json?
+
+    // Status
+    isActive Boolean @default(true)
+
+    // Timestamps
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+    expiresAt      DateTime
+    lastActivityAt DateTime @default(now())
+
+    // Relationships
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("user_sessions")
+}
+
+model SecurityLog {
+    id     String  @id @default(uuid())
+    userId String?
+
+    // Event Details
+    eventType   SecurityEventType
+    severity    SecuritySeverity
+    description String
+
+    // Context
+    ipAddress         String?
+    userAgent         String?
+    deviceFingerprint String?
+    location          Json?
+
+    // Additional Data
+    metadata Json?
+
+    // Timestamps
+    createdAt DateTime @default(now())
+
+    // Relationships
+    user User? @relation(fields: [userId], references: [id])
+
+    @@index([userId, createdAt])
+    @@index([eventType, createdAt])
+    @@map("security_logs")
+}
+
+// ================================
+// SUPPORT & HELP MODELS
+// ================================
+
+model SupportTicket {
+    id           String @id @default(uuid())
+    userId       String
+    ticketNumber String @unique
+
+    // Ticket Details
+    subject     String
+    description String
+    category    SupportCategory
+    priority    SupportPriority @default(MEDIUM)
+    status      SupportStatus   @default(OPEN)
+
+    // Assignment
+    assignedTo String? // Support agent ID
+
+    // Resolution
+    resolution String?
+    resolvedAt DateTime?
+
+    // Timestamps
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relationships
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("support_tickets")
+}
+
+// ================================
+// ENUMS
+// ================================
+
+enum Gender {
+    MALE
+    FEMALE
+    OTHER
+    PREFER_NOT_TO_SAY
+}
+
+enum KYCStatus {
+    PENDING
+    IN_REVIEW
+    APPROVED
+    REJECTED
+    EXPIRED
+}
+
+enum WalletType {
+    PERSONAL
+    BUSINESS
+    SAVINGS
+    INVESTMENT
+}
+
+enum WalletStatus {
+    ACTIVE
+    SUSPENDED
+    FROZEN
+    CLOSED
+}
+
+enum Currency {
+    USD
+    EUR
+    GBP
+    INR
+    CAD
+    AUD
+    JPY
+    CHF
+    CNY
+    BTC
+    ETH
 }
 
 enum TransactionType {
-  DEBIT
-  CREDIT
+    DEPOSIT
+    WITHDRAWAL
+    TRANSFER
+    PAYMENT
+    REFUND
+    FEE
+    INTEREST
+    REWARD
+    PENALTY
+    ADJUSTMENT
 }
 
-enum TransactionPurpose {
-  DEPOSIT
-  TRANSFER
-  WITHDRAWAL
-  REVERSAL
+enum TransactionCategory {
+    FOOD_DINING
+    TRANSPORTATION
+    SHOPPING
+    ENTERTAINMENT
+    BILLS_UTILITIES
+    HEALTHCARE
+    EDUCATION
+    TRAVEL
+    BUSINESS
+    INVESTMENT
+    TRANSFER
+    ATM_CASH
+    FEES
+    INCOME
+    OTHER
 }
 
-// Enum for Transaction Status
 enum TransactionStatus {
-  PENDING
-  COMPLETED
-  FAILED
+    PENDING
+    PROCESSING
+    COMPLETED
+    FAILED
+    CANCELLED
+    EXPIRED
+    DISPUTED
+    REFUNDED
+}
+
+enum PaymentMethodType {
+    CREDIT_CARD
+    DEBIT_CARD
+    BANK_ACCOUNT
+    PAYPAL
+    APPLE_PAY
+    GOOGLE_PAY
+    STRIPE
+    ACH
+    WIRE
+    CRYPTO
+}
+
+enum NotificationType {
+    TRANSACTION
+    SECURITY
+    PROMOTIONAL
+    SYSTEM
+    ACCOUNT
+    PAYMENT
+    REMINDER
+}
+
+enum NotificationChannel {
+    EMAIL
+    PUSH
+    SMS
+    IN_APP
+}
+
+enum SecurityEventType {
+    LOGIN
+    LOGOUT
+    FAILED_LOGIN
+    PASSWORD_CHANGE
+    PIN_CHANGE
+    TRANSACTION
+    SUSPICIOUS_ACTIVITY
+    ACCOUNT_LOCKED
+    DEVICE_ADDED
+    PAYMENT_METHOD_ADDED
+    ACCOUNT_CREATED
+}
+
+enum SecuritySeverity {
+    LOW
+    MEDIUM
+    HIGH
+    CRITICAL
+}
+
+enum SupportCategory {
+    TECHNICAL
+    BILLING
+    ACCOUNT
+    SECURITY
+    GENERAL
+    FEATURE_REQUEST
+    BUG_REPORT
+}
+
+enum SupportPriority {
+    LOW
+    MEDIUM
+    HIGH
+    URGENT
+}
+
+enum SupportStatus {
+    OPEN
+    IN_PROGRESS
+    WAITING_FOR_CUSTOMER
+    RESOLVED
+    CLOSED
 }

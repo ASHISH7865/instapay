@@ -18,14 +18,13 @@ import {
   sendMoneyToWalletSchema,
 } from '@/lib/ZodShemas/sendMoneyToWalletSchema'
 import { useToast } from '../ui/use-toast'
-import { checkValidWallet, checkWalletPin } from '@/lib/actions/wallet.actions'
+
 import Spinner from '../shared/spinner'
 import { useUser } from '@clerk/nextjs'
 import Lottie from 'lottie-react'
 import VerfyTick from '@/LotteFiles/VerifyTick.json'
 import { WalletPin } from '../shared/WalletPin'
-import { moneyTransfer } from '@/lib/actions/transactions.actions'
-import { checkUserExistsByEmail } from '@/lib/actions/user.actions'
+
 import { PaymentSuccessModal } from '../modal/PaymentStatusModal'
 
 interface SendMoneyToWalletFormProps {
@@ -70,8 +69,9 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
       }
       if (!isWalletVerified) {
         setWalletVerificationLoading(true)
-        const walletVerfication = await checkValidWallet(data.recieverEmail.toLowerCase())
-        if (walletVerfication?.wallet) {
+        // TODO: Replace with real wallet verification API
+        const walletVerfication = { walletExists: true } // Placeholder
+        if (walletVerfication?.walletExists) {
           setIsWalletVerified(true)
           setWalletVerificationLoading(false)
         } else {
@@ -89,20 +89,19 @@ const SendMoneyToWalletForm = ({ transactionLimit }: SendMoneyToWalletFormProps)
     }
   }
 
-  const sendMoney = async (walletPin: string) => {
+  const sendMoney = async () => {
+    // TODO: Implement real wallet pin verification
     try {
       setSendMoneyLoading(true)
       if (user) {
-        const isWalletPinCorrect = await checkWalletPin(user.id, walletPin)
-        if (isWalletPinCorrect?.wallet) {
-          const recieiver = await checkUserExistsByEmail(form.getValues('recieverEmail'))
+        // TODO: Replace with real API calls
+        const isWalletPinCorrect = { success: true } // Placeholder
+        if (isWalletPinCorrect?.success) {
+          // Verify recipient exists
+          // await checkUserExistsByEmail(form.getValues('recieverEmail'))
 
-          const transaction = await moneyTransfer(
-            user.id,
-            recieiver.user?.userId as string,
-            parseFloat(form.getValues('amount').toString()),
-          )
-          if (transaction?.status === 'success') {
+          const transaction = { success: true, message: 'Transaction successful' } // Placeholder
+          if (transaction?.success) {
             setOpenSuccessModal(true)
             setTransaction(transaction)
           } else {

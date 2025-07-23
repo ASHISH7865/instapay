@@ -1,116 +1,114 @@
-import { LogoIcon } from './Icons'
+import { Wallet2, Github, Twitter, Linkedin, Shield } from 'lucide-react'
+import Link from 'next/link'
 
 export const Footer = () => {
-  return (
-    <footer id='footer'>
-      <hr className='w-11/12 mx-auto' />
+    return (
+        <footer className='border-t bg-slate-50/50 dark:bg-slate-900/50'>
+            <div className='container py-16'>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
+                    {/* Brand section */}
+                    <div className='space-y-4'>
+                        <Link href='/' className='flex gap-2 items-center group'>
+                            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+                                <Wallet2 className='text-white h-5 w-5' />
+                            </div>
+                            <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                Instapay
+                            </span>
+                        </Link>
+                        <p className='text-muted-foreground text-sm leading-relaxed max-w-xs'>
+                            The future of digital payments. Secure, instant, and designed for the modern world.
+                        </p>
+                        <div className='flex gap-4'>
+                            <a href='#' className='p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors'>
+                                <Twitter className='h-5 w-5' />
+                            </a>
+                            <a href='#' className='p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors'>
+                                <Linkedin className='h-5 w-5' />
+                            </a>
+                            <a href='#' className='p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors'>
+                                <Github className='h-5 w-5' />
+                            </a>
+                        </div>
+                    </div>
 
-      <section className='container py-20 grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-x-12 gap-y-8'>
-        <div className='col-span-full xl:col-span-2'>
-          <a href='/' className='font-bold text-xl flex'>
-            <LogoIcon />
-            ShadcnUI/React
-          </a>
-        </div>
+                    {/* Product */}
+                    <div className='space-y-4'>
+                        <h3 className='font-semibold text-lg'>Product</h3>
+                        <div className='space-y-2'>
+                            <Link href='#features' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Features
+                            </Link>
+                            <Link href='#security' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Security
+                            </Link>
+                            <Link href='#pricing' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Pricing
+                            </Link>
+                            <Link href='#how-it-works' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                How it Works
+                            </Link>
+                        </div>
+                    </div>
 
-        <div className='flex flex-col gap-2'>
-          <h3 className='font-bold text-lg'>Follow US</h3>
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Github
-            </a>
-          </div>
+                    {/* Company */}
+                    <div className='space-y-4'>
+                        <h3 className='font-semibold text-lg'>Company</h3>
+                        <div className='space-y-2'>
+                            <Link href='#about' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                About Us
+                            </Link>
+                            <Link href='#' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Careers
+                            </Link>
+                            <Link href='#' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Press
+                            </Link>
+                            <Link href='#' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Blog
+                            </Link>
+                        </div>
+                    </div>
 
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Twitter
-            </a>
-          </div>
+                    {/* Support */}
+                    <div className='space-y-4'>
+                        <h3 className='font-semibold text-lg'>Support</h3>
+                        <div className='space-y-2'>
+                            <Link href='#faq' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Help Center
+                            </Link>
+                            <Link href='#' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Contact Us
+                            </Link>
+                            <Link href='#' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Privacy Policy
+                            </Link>
+                            <Link href='#' className='block text-sm text-muted-foreground hover:text-foreground transition-colors'>
+                                Terms of Service
+                            </Link>
+                        </div>
+                    </div>
+                </div>
 
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Dribbble
-            </a>
-          </div>
-        </div>
-
-        <div className='flex flex-col gap-2'>
-          <h3 className='font-bold text-lg'>Platforms</h3>
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Web
-            </a>
-          </div>
-
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Mobile
-            </a>
-          </div>
-
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Desktop
-            </a>
-          </div>
-        </div>
-
-        <div className='flex flex-col gap-2'>
-          <h3 className='font-bold text-lg'>About</h3>
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Features
-            </a>
-          </div>
-
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Pricing
-            </a>
-          </div>
-
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              FAQ
-            </a>
-          </div>
-        </div>
-
-        <div className='flex flex-col gap-2'>
-          <h3 className='font-bold text-lg'>Community</h3>
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Youtube
-            </a>
-          </div>
-
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Discord
-            </a>
-          </div>
-
-          <div>
-            <a href='#' className='opacity-60 hover:opacity-100'>
-              Twitch
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section className='container pb-14 text-center'>
-        <h3>
-          &copy; 2024 Landing page made by{' '}
-          <a
-            target='_blank'
-            href='https://github.com/leoMirandaa'
-            className='text-primary transition-all border-primary hover:border-b-2'
-            rel='noreferrer'
-          >
-            Leo Miranda
-          </a>
-        </h3>
-      </section>
-    </footer>
-  )
+                {/* Bottom section */}
+                <div className='border-t mt-12 pt-8'>
+                    <div className='flex flex-col md:flex-row justify-between items-center gap-4'>
+                        <p className='text-sm text-muted-foreground'>
+                            &copy; 2024 Instapay. All rights reserved.
+                        </p>
+                        <div className='flex items-center gap-6 text-sm text-muted-foreground'>
+                            <div className='flex items-center gap-2'>
+                                <div className='w-2 h-2 bg-green-500 rounded-full animate-pulse'></div>
+                                <span>SOC 2 Type II Certified</span>
+                            </div>
+                            <div className='flex items-center gap-2'>
+                                <Shield className='h-4 w-4' />
+                                <span>256-bit Encryption</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    )
 }

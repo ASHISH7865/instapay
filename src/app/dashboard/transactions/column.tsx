@@ -7,17 +7,30 @@ import { ArrowUpDown } from 'lucide-react'
 export type Transaction = {
   id: string
   trnxType: string
+  type?: 'CREDIT' | 'DEBIT'
   purpose: string
+  description?: string
   senderId: string
   recipientId: string
   amount: number
   balanceBefore: number
   balanceAfter: number
-  status: string
+  status: 'COMPLETED' | 'PENDING' | 'FAILED' | string
   trnxSummary: string
   createdAt: Date
   updatedAt: Date
   walletId: string
+  category?: string
+  sender?: {
+    firstName?: string | null
+    lastName?: string | null
+    email?: string | null
+  }
+  recipient?: {
+    firstName?: string | null
+    lastName?: string | null
+    email?: string | null
+  }
 }
 
 export const columns: ColumnDef<Transaction>[] = [

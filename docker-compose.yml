@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: instapay-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: instapay_db
+      POSTGRES_USER: instapay_user
+      POSTGRES_PASSWORD: instapay_password
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - instapay-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U instapay_user -d instapay_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin for Database Management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: instapay-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@instapay.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - instapay-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Redis for Caching and Sessions
+  redis:
+    image: redis:7-alpine
+    container_name: instapay-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - instapay-network
+    command: redis-server --appendonly yes --requirepass instapay_redis_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Next.js Application (optional - for production deployment)
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: instapay-app
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - DATABASE_URL=postgresql://instapay_user:instapay_password@postgres:5432/instapay_db
+  #     - REDIS_URL=redis://:instapay_redis_password@redis:6379
+  #   networks:
+  #     - instapay-network
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  instapay-network:
+    driver: bridge
+    name: instapay-network

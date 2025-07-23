@@ -2,12 +2,11 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
-import { GrayColor, ThemeColor } from './themes'
+import { GrayColor } from './themes'
 
 import type { BorderRadius, FontFamily } from './use-theme-generator'
 
 type State = {
-  accentColor: ThemeColor
   borderRadius: BorderRadius
   fontFamily: FontFamily
   grayColor: GrayColor
@@ -15,7 +14,6 @@ type State = {
 }
 
 type Actions = {
-  setAccentColor: (color: ThemeColor) => void
   setGrayColor: (color: GrayColor) => void
   setFontFamily: (font: FontFamily) => void
   setBorderRadius: (radius: BorderRadius) => void
@@ -24,7 +22,6 @@ type Actions = {
 }
 
 const initialState: State = {
-  accentColor: 'zinc',
   style: 'default',
   borderRadius: '0.5',
   fontFamily: {
@@ -41,7 +38,6 @@ export const useThemeStore = create<State & Actions>()(
       (set) => ({
         ...initialState,
         setStyle: (style) => set(() => ({ style })),
-        setAccentColor: (accentColor) => set(() => ({ accentColor })),
         setBorderRadius: (borderRadius) => set(() => ({ borderRadius })),
         setFontFamily: (fontFamily) => set(() => ({ fontFamily })),
         setGrayColor: (grayColor) => set(() => ({ grayColor })),

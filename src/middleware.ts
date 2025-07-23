@@ -6,6 +6,13 @@ import { authMiddleware } from '@clerk/nextjs'
 export default authMiddleware({
   publicRoutes: ['/', '/api/webhook/clerk', '/api/webhooks/stripe', '/(api|trpc)(.*)'],
   ignoredRoutes: ['/api/webhook/clerk'],
+  // Optimize for faster logout redirects
+  afterAuth(auth, req) {
+    // Handle logout redirects more efficiently
+    if (!auth.userId && req.nextUrl.pathname.startsWith('/dashboard')) {
+      return Response.redirect(new URL('/', req.url))
+    }
+  }
 })
 
 export const config = {

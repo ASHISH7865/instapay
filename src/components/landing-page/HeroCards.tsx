@@ -7,7 +7,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import { ArrowRight, BarChart2, DollarSign, ShieldCheck } from 'lucide-react'
-import { ThemeCustomizer } from '@/components/shared/theme-customizer'
+
 
 const featureCards = [
   {
@@ -58,12 +58,7 @@ export const HeroCards = () => {
           ))}
         </CarouselContent>
       </Carousel>
-      <div className='mt-4 flex  w-[300px] items-center'>
-        <p className='text-muted-foreground text-lg'>
-          Customize your experience with our theme customizer.
-        </p>
-        <ThemeCustomizer />
-      </div>
+
     </div>
   )
 }
